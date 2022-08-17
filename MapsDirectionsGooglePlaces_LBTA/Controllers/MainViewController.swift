@@ -16,37 +16,86 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupMapView()
-        setupRegionForMap()
-        setupAnnotationForMap()
-    }
-    
-    fileprivate func setupMapView() {
+        
         mapView.delegate = self
         view.addSubview(mapView)
         mapView.fillSuperview()
+        
+        setupRegionForMap()
+        
+//        setupAnnotationsForMap()
+        performLocalSearch()
     }
     
-    fileprivate func setupAnnotationForMap() {
+    fileprivate func performLocalSearch() {
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = "Apple"
+        request.region = mapView.region
+        
+        let localSearch = MKLocalSearch(request: request)
+        localSearch.start { (resp, err) in
+            if let err = err {
+                print("Failed local search:", err)
+                return
+            }
+            
+            // Success
+            resp?.mapItems.forEach({ (mapItem) in
+                
+//                print(mapItem.placemark.subThoroughfare ?? "")
+                
+                let placemark = mapItem.placemark
+                var addressString = ""
+                if placemark.subThoroughfare != nil {
+                    addressString = placemark.subThoroughfare! + " "
+                }
+                if placemark.thoroughfare != nil {
+                    addressString += placemark.thoroughfare! + ", "
+                }
+                if placemark.postalCode != nil {
+                    addressString += placemark.postalCode! + " "
+                }
+                if placemark.locality != nil {
+                    addressString += placemark.locality! + ", "
+                }
+                if placemark.administrativeArea != nil {
+                    addressString += placemark.administrativeArea! + " "
+                }
+                if placemark.country != nil {
+                    addressString += placemark.country!
+                }
+                print(addressString)
+                
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = mapItem.placemark.coordinate
+                annotation.title = mapItem.name
+                self.mapView.addAnnotation(annotation)
+//                mapItem.placemark.coordinate
+            })
+            self.mapView.showAnnotations(self.mapView.annotations, animated: true)
+        }
+    }
+    
+    fileprivate func setupAnnotationsForMap() {
         let annotation = MKPointAnnotation()
-        annotation.coordinate = CLLocationCoordinate2D(latitude: 59.931505, longitude: 30.364036)
-        annotation.title = "Saint-Petersburg"
-        annotation.subtitle = "Russia"
+        annotation.coordinate = CLLocationCoordinate2D(latitude: 37.7666, longitude: -122.427290)
+        annotation.title = "San Francisco"
+        annotation.subtitle = "CA"
         mapView.addAnnotation(annotation)
         
-        let petergofAnnotation = MKPointAnnotation()
-        petergofAnnotation.coordinate = CLLocationCoordinate2D(latitude: 59.886560, longitude: 29.908711)
-        petergofAnnotation.title = "Petergof"
-        petergofAnnotation.subtitle = "SPB"
-        mapView.addAnnotation(petergofAnnotation)
-    
+        let appleCampusAnnotation = MKPointAnnotation()
+        appleCampusAnnotation.coordinate = .init(latitude: 37.3326, longitude: -122.030024)
+        appleCampusAnnotation.title = "Apple Campus"
+        appleCampusAnnotation.subtitle = "Cupertino, CA"
+        mapView.addAnnotation(appleCampusAnnotation)
+        
         mapView.showAnnotations(self.mapView.annotations, animated: true)
     }
     
     fileprivate func setupRegionForMap() {
-        let coordinate = CLLocationCoordinate2D(latitude: 59.931505, longitude: 30.364036)
-        let span = MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
-        let region  = MKCoordinateRegion(center: coordinate, span: span)
+        let centerCoordinate = CLLocationCoordinate2D(latitude: 37.7666, longitude: -122.427290)
+        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        let region = MKCoordinateRegion(center: centerCoordinate, span: span)
         mapView.setRegion(region, animated: true)
     }
 }
