@@ -16,9 +16,31 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupMapView()
+        setupRegionForMap()
+        setupAnnotationForMap()
+    }
+    
+    fileprivate func setupMapView() {
+        mapView.delegate = self
         view.addSubview(mapView)
         mapView.fillSuperview()
-        setupRegionForMap()
+    }
+    
+    fileprivate func setupAnnotationForMap() {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = CLLocationCoordinate2D(latitude: 59.931505, longitude: 30.364036)
+        annotation.title = "Saint-Petersburg"
+        annotation.subtitle = "Russia"
+        mapView.addAnnotation(annotation)
+        
+        let petergofAnnotation = MKPointAnnotation()
+        petergofAnnotation.coordinate = CLLocationCoordinate2D(latitude: 59.886560, longitude: 29.908711)
+        petergofAnnotation.title = "Petergof"
+        petergofAnnotation.subtitle = "SPB"
+        mapView.addAnnotation(petergofAnnotation)
+    
+        mapView.showAnnotations(self.mapView.annotations, animated: true)
     }
     
     fileprivate func setupRegionForMap() {
@@ -29,10 +51,20 @@ class MainViewController: UIViewController {
     }
 }
 
+extension MainViewController: MKMapViewDelegate {
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "id")
+        annotationView.canShowCallout = true
+        return annotationView
+    }
+}
+
 
 // MARK: - SwiftUI Preview
 
 struct MainPreview: PreviewProvider {
+    
     static var previews: some View {
         ContainerView().edgesIgnoringSafeArea(.all)
     }
@@ -49,3 +81,6 @@ struct MainPreview: PreviewProvider {
         typealias UIViewControllerType = MainViewController
     }
 }
+
+
+
