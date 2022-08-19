@@ -13,6 +13,7 @@ import SwiftUI
 class MainViewController: UIViewController {
     
     let mapView = MKMapView()
+    let searchTextField = UITextField(placeholder: "Search")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,11 +26,36 @@ class MainViewController: UIViewController {
         
 //        setupAnnotationsForMap()
         performLocalSearch()
+        setupSearchUI()
+    }
+    
+    fileprivate func setupSearchUI() {
+        let whiteContainer = UIView(backgroundColor: .white)
+        view.addSubview(whiteContainer)
+        whiteContainer.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: .init(top: 0, left: 16, bottom: 0, right: 16))
+        whiteContainer.stack(searchTextField).withMargins(.allSides(16))
+        
+        // listen for text changes and then perform new search
+        // old school :)
+//        searchTextField.addTarget(self, action: #selector(handleSearchChanges), for: .editingChanged)
+        
+        // new school :) Search Throttling
+        // search on the last keystroke of text changes and basically wait 500 milliseconds
+        NotificationCenter.default
+            .publisher(for: UITextField.textDidChangeNotification, object: searchTextField)
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .sink { (_) in
+                self.performLocalSearch()
+            }
+    }
+    
+    @objc fileprivate func handleSearchChanges() {
+        performLocalSearch()
     }
     
     fileprivate func performLocalSearch() {
         let request = MKLocalSearch.Request()
-        request.naturalLanguageQuery = "Apple"
+        request.naturalLanguageQuery = searchTextField.text
         request.region = mapView.region
         
         let localSearch = MKLocalSearch(request: request)
@@ -40,32 +66,12 @@ class MainViewController: UIViewController {
             }
             
             // Success
+            self.mapView.removeAnnotations(self.mapView.annotations) // remove old annotations
+            
             resp?.mapItems.forEach({ (mapItem) in
                 
-//                print(mapItem.placemark.subThoroughfare ?? "")
-                
-                let placemark = mapItem.placemark
-                var addressString = ""
-                if placemark.subThoroughfare != nil {
-                    addressString = placemark.subThoroughfare! + " "
-                }
-                if placemark.thoroughfare != nil {
-                    addressString += placemark.thoroughfare! + ", "
-                }
-                if placemark.postalCode != nil {
-                    addressString += placemark.postalCode! + " "
-                }
-                if placemark.locality != nil {
-                    addressString += placemark.locality! + ", "
-                }
-                if placemark.administrativeArea != nil {
-                    addressString += placemark.administrativeArea! + " "
-                }
-                if placemark.country != nil {
-                    addressString += placemark.country!
-                }
-                print(addressString)
-                
+                print(mapItem.adress())
+            
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = mapItem.placemark.coordinate
                 annotation.title = mapItem.name
@@ -109,27 +115,51 @@ extension MainViewController: MKMapViewDelegate {
     }
 }
 
-
-// MARK: - SwiftUI Preview
-
-struct MainPreview: PreviewProvider {
-    
-    static var previews: some View {
-        ContainerView().edgesIgnoringSafeArea(.all)
-    }
-    
-    struct ContainerView: UIViewControllerRepresentable {
-        func makeUIViewController(context: Context) -> MainViewController {
-            return MainViewController()
+extension MKMapItem {
+    func adress() -> String {
+        var addressString = ""
+        if placemark.subThoroughfare != nil {
+            addressString = placemark.subThoroughfare! + " "
         }
-        
-        func updateUIViewController(_ uiViewController: MainViewController, context: Context) {
-            
+        if placemark.thoroughfare != nil {
+            addressString += placemark.thoroughfare! + ", "
         }
-        
-        typealias UIViewControllerType = MainViewController
+        if placemark.postalCode != nil {
+            addressString += placemark.postalCode! + " "
+        }
+        if placemark.locality != nil {
+            addressString += placemark.locality! + ", "
+        }
+        if placemark.administrativeArea != nil {
+            addressString += placemark.administrativeArea! + " "
+        }
+        if placemark.country != nil {
+            addressString += placemark.country!
+        }
+        return addressString
     }
 }
 
+// MARK: - SwiftUI Preview
+
+//struct MainPreview: PreviewProvider {
+//    
+//    static var previews: some View {
+//        ContainerView().edgesIgnoringSafeArea(.all)
+//    }
+//    
+//    struct ContainerView: UIViewControllerRepresentable {
+//        func makeUIViewController(context: Context) -> MainViewController {
+//            return MainViewController()
+//        }
+//        
+//        func updateUIViewController(_ uiViewController: MainViewController, context: Context) {
+//            
+//        }
+//        
+//        typealias UIViewControllerType = MainViewController
+//    }
+//}
+//
 
 
