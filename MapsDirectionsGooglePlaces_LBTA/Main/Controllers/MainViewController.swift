@@ -56,12 +56,12 @@ class MainViewController: UIViewController {
         
         // NEW SCHOOL Search Throttling
         // search on the last keystroke of text changes and basically wait 500 milliseconds
-//        NotificationCenter.default
+//        _ = NotificationCenter.default
 //            .publisher(for: UITextField.textDidChangeNotification, object: searchTextField)
 //            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
 //            .sink { (_) in
 //                self.performLocalSearch()
-//        }
+//            }
     }
     
     fileprivate func setupLocationsCarousel() {
@@ -99,7 +99,8 @@ class MainViewController: UIViewController {
             self.locationsController.items.removeAll()
             
             resp?.mapItems.forEach({ (mapItem) in
-                let annotation = MKPointAnnotation()
+                let annotation = CustomMapItemAnnotation()
+                annotation.mapItem = mapItem
                 annotation.coordinate = mapItem.placemark.coordinate
                 annotation.title = mapItem.name
                 self.mapView.addAnnotation(annotation)
@@ -110,6 +111,12 @@ class MainViewController: UIViewController {
             self.locationsController.collectionView.scrollToItem(at: [0, 0], at: .centeredHorizontally, animated: true)
             self.mapView.showAnnotations(self.mapView.annotations, animated: true)
         }
+    }
+    
+    class CustomMapItemAnnotation: MKPointAnnotation {
+        var mapItem: MKMapItem?
+        
+        
     }
     
 //    fileprivate func setupRegionForMap() {

@@ -10,6 +10,12 @@ import UIKit
 
 extension MainViewController: MKMapViewDelegate, CLLocationManagerDelegate {
     
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        guard let customAnnotation = view.annotation as? CustomMapItemAnnotation else { return }
+        guard let index = locationsController.items.firstIndex(where: {$0.name == customAnnotation.mapItem?.name}) else { return }
+        locationsController.collectionView.scrollToItem(at: [0, index], at: .centeredHorizontally, animated: true)
+    }
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if (annotation is MKPointAnnotation) {
             let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "id")
@@ -32,7 +38,7 @@ extension MainViewController: MKMapViewDelegate, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let firstLocation = locations.first else { return }
         mapView.setRegion(.init(center: firstLocation.coordinate, span: .init(latitudeDelta: 0.1, longitudeDelta: 0.1)), animated: false)
-        locationManager.stopUpdatingLocation()
+//        locationManager.stopUpdatingLocation()
     }
 }
 
