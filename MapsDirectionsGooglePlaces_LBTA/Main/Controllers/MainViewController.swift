@@ -14,22 +14,24 @@ class MainViewController: UIViewController {
     
     let mapView = MKMapView()
     
+    let searchTextField = UITextField(placeholder: "Search")
+    
+    let locationsController = LocationsCarouselController(scrollDirection: .horizontal)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupMapView()
         setupRegionForMap()
+        setupMapView()
         setupSearchUI()
         performLocalSearch()
         setupLocationsCarousel()
+        locationsController.mainController = self
     }
-    
-    let searchTextField = UITextField(placeholder: "Search")
     
     fileprivate func setupMapView() {
         mapView.delegate = self
         view.addSubview(mapView)
         mapView.fillSuperview()
-
     }
     
     fileprivate func setupSearchUI() {
@@ -54,8 +56,6 @@ class MainViewController: UIViewController {
 //        }
     }
     
-    let locationsController = LocationsCarouselController(scrollDirection: .horizontal)
-    
     fileprivate func setupLocationsCarousel() {
         let locationsView = locationsController.view!
         
@@ -72,6 +72,12 @@ class MainViewController: UIViewController {
         request.naturalLanguageQuery = searchTextField.text
         request.region = mapView.region
         
+        mapView.annotations.forEach { (annotation) in
+            if annotation.title == "TEST" {
+                mapView.selectAnnotation(annotation, animated: true)
+            }
+        }
+        
         let localSearch = MKLocalSearch(request: request)
         localSearch.start { (resp, err) in
             if let err = err {
@@ -82,13 +88,18 @@ class MainViewController: UIViewController {
             // Success
             // remove old annotations
             self.mapView.removeAnnotations(self.mapView.annotations)
+            self.locationsController.items.removeAll()
             
             resp?.mapItems.forEach({ (mapItem) in
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = mapItem.placemark.coordinate
                 annotation.title = mapItem.name
                 self.mapView.addAnnotation(annotation)
+                
+                // tell our locationsController
+                self.locationsController.items.append(mapItem)
             })
+            self.locationsController.collectionView.scrollToItem(at: [0, 0], at: .centeredHorizontally, animated: true)
             self.mapView.showAnnotations(self.mapView.annotations, animated: true)
         }
     }
