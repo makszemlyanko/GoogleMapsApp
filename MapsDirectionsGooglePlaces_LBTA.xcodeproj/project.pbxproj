@@ -15,6 +15,8 @@
 		153EDA3428AB81D30078F8CD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 153EDA3228AB81D30078F8CD /* LaunchScreen.storyboard */; };
 		153EDA3D28AB83660078F8CD /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153EDA3C28AB83660078F8CD /* MainViewController.swift */; };
 		153EDA4528AB88750078F8CD /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = 153EDA4428AB88750078F8CD /* LBTATools */; };
+		15D8756F28B0DB0300BFA940 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8756E28B0DB0300BFA940 /* Extensions.swift */; };
+		15D8757328B0DBC100BFA940 /* LocationsCarouselController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8757228B0DBC100BFA940 /* LocationsCarouselController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +29,8 @@
 		153EDA3328AB81D30078F8CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		153EDA3528AB81D30078F8CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		153EDA3C28AB83660078F8CD /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		15D8756E28B0DB0300BFA940 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		15D8757228B0DBC100BFA940 /* LocationsCarouselController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsCarouselController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,10 +64,10 @@
 		153EDA2628AB81CF0078F8CD /* MapsDirectionsGooglePlaces_LBTA */ = {
 			isa = PBXGroup;
 			children = (
+				15D8756C28B0DAD300BFA940 /* Main */,
 				153EDA2728AB81CF0078F8CD /* AppDelegate.swift */,
 				153EDA2928AB81CF0078F8CD /* SceneDelegate.swift */,
 				153EDA2B28AB81CF0078F8CD /* ContentView.swift */,
-				153EDA4028AB84490078F8CD /* Controllers */,
 				153EDA2D28AB81D30078F8CD /* Assets.xcassets */,
 				153EDA3228AB81D30078F8CD /* LaunchScreen.storyboard */,
 				153EDA3528AB81D30078F8CD /* Info.plist */,
@@ -84,8 +88,26 @@
 			isa = PBXGroup;
 			children = (
 				153EDA3C28AB83660078F8CD /* MainViewController.swift */,
+				15D8757228B0DBC100BFA940 /* LocationsCarouselController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		15D8756C28B0DAD300BFA940 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				15D8756D28B0DAE600BFA940 /* Extensions */,
+				153EDA4028AB84490078F8CD /* Controllers */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		15D8756D28B0DAE600BFA940 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				15D8756E28B0DB0300BFA940 /* Extensions.swift */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -164,6 +186,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15D8757328B0DBC100BFA940 /* LocationsCarouselController.swift in Sources */,
+				15D8756F28B0DB0300BFA940 /* Extensions.swift in Sources */,
 				153EDA2828AB81CF0078F8CD /* AppDelegate.swift in Sources */,
 				153EDA2A28AB81CF0078F8CD /* SceneDelegate.swift in Sources */,
 				153EDA2C28AB81CF0078F8CD /* ContentView.swift in Sources */,
