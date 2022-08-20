@@ -8,12 +8,31 @@
 import MapKit
 import UIKit
 
-extension MainViewController: MKMapViewDelegate {
+extension MainViewController: MKMapViewDelegate, CLLocationManagerDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "id")
-        annotationView.canShowCallout = true
-        return annotationView
+        if (annotation is MKPointAnnotation) {
+            let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "id")
+            annotationView.canShowCallout = true
+            return annotationView
+        }
+        return nil
+    }
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse:
+            print("Recieved authorization of a user location")
+            locationManager.startUpdatingLocation()
+        default:
+            print("Failed to authorize")
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let firstLocation = locations.first else { return }
+        mapView.setRegion(.init(center: firstLocation.coordinate, span: .init(latitudeDelta: 0.1, longitudeDelta: 0.1)), animated: false)
+        locationManager.stopUpdatingLocation()
     }
 }
 

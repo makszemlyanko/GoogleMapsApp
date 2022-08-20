@@ -18,14 +18,22 @@ class MainViewController: UIViewController {
     
     let locationsController = LocationsCarouselController(scrollDirection: .horizontal)
     
+    let locationManager = CLLocationManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupRegionForMap()
+//        setupRegionForMap()
         setupMapView()
         setupSearchUI()
-        performLocalSearch()
         setupLocationsCarousel()
-        locationsController.mainController = self
+        performLocalSearch()
+        requestUserlocation()
+        mapView.showsUserLocation = true
+    }
+    
+    fileprivate func requestUserlocation() {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.delegate = self
     }
     
     fileprivate func setupMapView() {
@@ -58,7 +66,7 @@ class MainViewController: UIViewController {
     
     fileprivate func setupLocationsCarousel() {
         let locationsView = locationsController.view!
-        
+        locationsController.mainController = self
         view.addSubview(locationsView)
         locationsView.anchor(top: nil, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, size: .init(width: 0, height: 150))
     }
@@ -104,12 +112,12 @@ class MainViewController: UIViewController {
         }
     }
     
-    fileprivate func setupRegionForMap() {
-        let centerCoordinate = CLLocationCoordinate2D(latitude: 39.803729242358195, longitude: -104.97505054145867)
-        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-        let region = MKCoordinateRegion(center: centerCoordinate, span: span)
-        mapView.setRegion(region, animated: true)
-    }
+//    fileprivate func setupRegionForMap() {
+//        let centerCoordinate = CLLocationCoordinate2D(latitude: 39.803729242358195, longitude: -104.97505054145867)
+//        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+//        let region = MKCoordinateRegion(center: centerCoordinate, span: span)
+//        mapView.setRegion(region, animated: true)
+//    }
 }
 
 
