@@ -28,7 +28,7 @@ class MainViewController: UIViewController {
         setupLocationsCarousel()
         performLocalSearch()
         requestUserlocation()
-        mapView.showsUserLocation = true
+        
     }
     
     fileprivate func requestUserlocation() {
@@ -40,6 +40,7 @@ class MainViewController: UIViewController {
         mapView.delegate = self
         view.addSubview(mapView)
         mapView.fillSuperview()
+        mapView.showsUserLocation = true
     }
     
     fileprivate func setupSearchUI() {
@@ -137,6 +138,7 @@ struct MainPreview: PreviewProvider {
     }
     
     struct ContainerView: UIViewControllerRepresentable {
+        
         func makeUIViewController(context: Context) -> MainViewController {
             return MainViewController()
         }

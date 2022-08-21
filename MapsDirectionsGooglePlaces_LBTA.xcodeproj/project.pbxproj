@@ -17,6 +17,7 @@
 		153EDA4528AB88750078F8CD /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = 153EDA4428AB88750078F8CD /* LBTATools */; };
 		15D8756F28B0DB0300BFA940 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8756E28B0DB0300BFA940 /* Extensions.swift */; };
 		15D8757328B0DBC100BFA940 /* LocationsCarouselController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8757228B0DBC100BFA940 /* LocationsCarouselController.swift */; };
+		15D8757728B248A300BFA940 /* DirectionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8757628B248A300BFA940 /* DirectionsController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		153EDA3C28AB83660078F8CD /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		15D8756E28B0DB0300BFA940 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		15D8757228B0DBC100BFA940 /* LocationsCarouselController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsCarouselController.swift; sourceTree = "<group>"; };
+		15D8757628B248A300BFA940 /* DirectionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,7 @@
 		153EDA2628AB81CF0078F8CD /* MapsDirectionsGooglePlaces_LBTA */ = {
 			isa = PBXGroup;
 			children = (
+				15D8757528B2488F00BFA940 /* Directions */,
 				15D8756C28B0DAD300BFA940 /* Main */,
 				153EDA2728AB81CF0078F8CD /* AppDelegate.swift */,
 				153EDA2928AB81CF0078F8CD /* SceneDelegate.swift */,
@@ -108,6 +111,14 @@
 				15D8756E28B0DB0300BFA940 /* Extensions.swift */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		15D8757528B2488F00BFA940 /* Directions */ = {
+			isa = PBXGroup;
+			children = (
+				15D8757628B248A300BFA940 /* DirectionsController.swift */,
+			);
+			path = Directions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -188,6 +199,7 @@
 			files = (
 				15D8757328B0DBC100BFA940 /* LocationsCarouselController.swift in Sources */,
 				15D8756F28B0DB0300BFA940 /* Extensions.swift in Sources */,
+				15D8757728B248A300BFA940 /* DirectionsController.swift in Sources */,
 				153EDA2828AB81CF0078F8CD /* AppDelegate.swift in Sources */,
 				153EDA2A28AB81CF0078F8CD /* SceneDelegate.swift in Sources */,
 				153EDA2C28AB81CF0078F8CD /* ContentView.swift in Sources */,
