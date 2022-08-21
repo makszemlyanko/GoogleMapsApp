@@ -20,8 +20,40 @@ class DirectionsController: UIViewController {
         setupNavBarUI()
         setupMavView()
         setupRegionForMap() // San Francisco
+        requestForDirections()
         setupStartAndDummyAnnotations()
+    }
+    
+    fileprivate func requestForDirections() {
+        let request = MKDirections.Request()
         
+        let startingPlacemark = MKPlacemark(coordinate: .init(latitude: 37.773972, longitude: -122.431297))
+        request.source = .init(placemark: startingPlacemark)
+        
+        let endingPlacemark = MKPlacemark(coordinate: .init(latitude: 37.331352, longitude: -122.030331))
+        request.destination = .init(placemark: endingPlacemark)
+        
+//        request.transportType = .walking
+        
+        request.requestsAlternateRoutes = true
+        
+        
+        let directions = MKDirections(request: request)
+        directions.calculate { (response, error) in
+            if let error = error {
+                print("Failed to find routing info: ", error)
+                return
+            }
+            // Success
+            
+            
+//            guard let route = response?.routes.first else { return }
+            
+            response?.routes.forEach({ (route) in
+                self.mapView.addOverlay(route.polyline)
+            })
+            
+        }
     }
     
     fileprivate func setupStartAndDummyAnnotations() {
@@ -42,13 +74,13 @@ class DirectionsController: UIViewController {
         view.addSubview(mapView)
         mapView.anchor(top: navBar.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
         mapView.showsUserLocation = true
+        mapView.delegate = self
     }
     
     fileprivate func setupNavBarUI() {
         view.addSubview(navBar)
         navBar.setupShadow(opacity: 0.5, radius: 5); #warning("no shadow")
         navBar.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.topAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: -100, right: 0))
-        
     }
     
     fileprivate func setupRegionForMap() {
@@ -60,13 +92,22 @@ class DirectionsController: UIViewController {
     
 }
 
+extension DirectionsController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let polylineRenderer = MKPolylineRenderer(overlay: overlay)
+        polylineRenderer.strokeColor = #colorLiteral(red: 0.1231942251, green: 0.5648767352, blue: 0.9659515023, alpha: 1)
+        polylineRenderer.lineWidth = 5
+        return polylineRenderer
+    }
+}
+
 // MARK: - SwiftUI Preview
 
 struct DirectionsPreview: PreviewProvider {
     
     static var previews: some View {
         ContainerView().edgesIgnoringSafeArea(.all)
-            .environment(\.colorScheme, .dark) // dark mode for map
+            .environment(\.colorScheme, .light)
     }
     
     struct ContainerView: UIViewControllerRepresentable {
