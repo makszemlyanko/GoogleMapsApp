@@ -19,6 +19,7 @@
 		15D8757328B0DBC100BFA940 /* LocationsCarouselController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8757228B0DBC100BFA940 /* LocationsCarouselController.swift */; };
 		15D8757C28B2AA8400BFA940 /* DirectionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8757B28B2AA8400BFA940 /* DirectionsController.swift */; };
 		15D8758128B35A2500BFA940 /* LocationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8758028B35A2500BFA940 /* LocationSearchController.swift */; };
+		15D8758728B3A1DD00BFA940 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 15D8758628B3A1DD00BFA940 /* JGProgressHUD */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15D8758728B3A1DD00BFA940 /* JGProgressHUD in Frameworks */,
 				153EDA4528AB88750078F8CD /* LBTATools in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -126,6 +128,7 @@
 			name = MapsDirectionsGooglePlaces_LBTA;
 			packageProductDependencies = (
 				153EDA4428AB88750078F8CD /* LBTATools */,
+				15D8758628B3A1DD00BFA940 /* JGProgressHUD */,
 			);
 			productName = MapsDirectionsGooglePlaces_LBTA;
 			productReference = 153EDA2428AB81CF0078F8CD /* MapsDirectionsGooglePlaces_LBTA.app */;
@@ -156,6 +159,7 @@
 			mainGroup = 153EDA1B28AB81CF0078F8CD;
 			packageReferences = (
 				153EDA4328AB88750078F8CD /* XCRemoteSwiftPackageReference "LBTATools" */,
+				15D8758528B3A1DA00BFA940 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 			);
 			productRefGroup = 153EDA2528AB81CF0078F8CD /* Products */;
 			projectDirPath = "";
@@ -399,6 +403,14 @@
 				minimumVersion = 1.0.17;
 			};
 		};
+		15D8758528B3A1DA00BFA940 /* XCRemoteSwiftPackageReference "JGProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JonasGessner/JGProgressHUD.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -406,6 +418,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 153EDA4328AB88750078F8CD /* XCRemoteSwiftPackageReference "LBTATools" */;
 			productName = LBTATools;
+		};
+		15D8758628B3A1DD00BFA940 /* JGProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 15D8758528B3A1DA00BFA940 /* XCRemoteSwiftPackageReference "JGProgressHUD" */;
+			productName = JGProgressHUD;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

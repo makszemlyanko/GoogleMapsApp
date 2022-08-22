@@ -10,6 +10,7 @@ import UIKit
 import LBTATools
 import MapKit
 import SwiftUI
+import JGProgressHUD
 
 class DirectionsController: UIViewController {
     
@@ -59,8 +60,15 @@ class DirectionsController: UIViewController {
         request.source = startMapItem
         request.destination = endMapItem
         
+        let hud = JGProgressHUD(style: .dark)
+        hud.textLabel.text = "Routing..."
+        hud.show(in: view)
+        
         let directions = MKDirections(request: request)
         directions.calculate { (resp, err) in
+            
+            hud.dismiss()
+            
             if let err = err {
                 print("Failed to find routing info:", err)
                 return
