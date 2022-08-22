@@ -19,14 +19,17 @@ class DirectionsController: UIViewController {
     let startTextField = IndentedTextField(padding: 12, cornerRadius: 5)
     let endTextField = IndentedTextField(padding: 12, cornerRadius: 5)
     
+    var startMapItem: MKMapItem?
+    var endMapItem: MKMapItem?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(mapView)
         setupNavBarUI()
         setupMapView()
         setupRegionForMap() // San Francisco
-        setupStartEndDummyAnnotations()
-        requestForDirections()
+//        setupStartEndDummyAnnotations()
+//        requestForDirections()
         
     }
     
@@ -53,12 +56,8 @@ class DirectionsController: UIViewController {
     
     fileprivate func requestForDirections() {
         let request = MKDirections.Request()
-        
-        let startingPlacemark = MKPlacemark(coordinate: .init(latitude: 37.7666, longitude: -122.427290))
-        request.source = .init(placemark: startingPlacemark)
-        
-        let endingPlacemark = MKPlacemark(coordinate: .init(latitude: 37.331352, longitude: -122.030331))
-        request.destination = .init(placemark: endingPlacemark)
+        request.source = startMapItem
+        request.destination = endMapItem
         
         let directions = MKDirections(request: request)
         directions.calculate { (resp, err) in
@@ -119,6 +118,10 @@ class DirectionsController: UIViewController {
         let vc = LocationSearchController()
         vc.selectionHandler = { [weak self] mapItem in
             self?.startTextField.text = mapItem.name
+            
+            // add starting annotaton and show it on the map
+            self?.startMapItem = mapItem
+            self?.refreshMap()
         }
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -127,8 +130,33 @@ class DirectionsController: UIViewController {
         let vc = LocationSearchController()
         vc.selectionHandler = { [weak self] mapItem in
             self?.endTextField.text = mapItem.name
+            
+            // add ending annotation and show it on the map
+            self?.endMapItem = mapItem
+            self?.refreshMap()
         }
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func refreshMap() {
+        mapView.removeAnnotations(mapView.annotations) // remove old annotation
+        mapView.removeOverlays(mapView.overlays) // remove old route
+        
+        if let mapItem = startMapItem {
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = mapItem.placemark.coordinate
+            annotation.subtitle = mapItem.name
+            mapView.addAnnotation(annotation)
+        }
+        
+        if let mapItem = endMapItem {
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = mapItem.placemark.coordinate
+            annotation.subtitle = mapItem.name
+            mapView.addAnnotation(annotation)
+        }
+        requestForDirections()
+        mapView.showAnnotations(mapView.annotations, animated: false)
     }
     
     fileprivate func setupRegionForMap() {
@@ -154,7 +182,6 @@ struct DirectionsPreview: PreviewProvider {
     
     static var previews: some View {
         ContainerView().edgesIgnoringSafeArea(.all)
-//            .environment(\.colorScheme, .light)
     }
     
     struct ContainerView: UIViewControllerRepresentable {
