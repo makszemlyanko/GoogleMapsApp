@@ -18,6 +18,7 @@
 		15D8756F28B0DB0300BFA940 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8756E28B0DB0300BFA940 /* Extensions.swift */; };
 		15D8757328B0DBC100BFA940 /* LocationsCarouselController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8757228B0DBC100BFA940 /* LocationsCarouselController.swift */; };
 		15D8757C28B2AA8400BFA940 /* DirectionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8757B28B2AA8400BFA940 /* DirectionsController.swift */; };
+		15D8758128B35A2500BFA940 /* LocationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8758028B35A2500BFA940 /* LocationSearchController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		15D8756E28B0DB0300BFA940 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		15D8757228B0DBC100BFA940 /* LocationsCarouselController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsCarouselController.swift; sourceTree = "<group>"; };
 		15D8757B28B2AA8400BFA940 /* DirectionsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectionsController.swift; sourceTree = "<group>"; };
+		15D8758028B35A2500BFA940 /* LocationSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 		153EDA2628AB81CF0078F8CD /* MapsDirectionsGooglePlaces_LBTA */ = {
 			isa = PBXGroup;
 			children = (
+				15D8756E28B0DB0300BFA940 /* Extensions.swift */,
 				15D8757528B2488F00BFA940 /* Directions */,
 				15D8756C28B0DAD300BFA940 /* Main */,
 				153EDA2728AB81CF0078F8CD /* AppDelegate.swift */,
@@ -87,36 +90,20 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		153EDA4028AB84490078F8CD /* Controllers */ = {
+		15D8756C28B0DAD300BFA940 /* Main */ = {
 			isa = PBXGroup;
 			children = (
 				153EDA3C28AB83660078F8CD /* MainViewController.swift */,
 				15D8757228B0DBC100BFA940 /* LocationsCarouselController.swift */,
 			);
-			path = Controllers;
-			sourceTree = "<group>";
-		};
-		15D8756C28B0DAD300BFA940 /* Main */ = {
-			isa = PBXGroup;
-			children = (
-				15D8756D28B0DAE600BFA940 /* Extensions */,
-				153EDA4028AB84490078F8CD /* Controllers */,
-			);
 			path = Main;
-			sourceTree = "<group>";
-		};
-		15D8756D28B0DAE600BFA940 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				15D8756E28B0DB0300BFA940 /* Extensions.swift */,
-			);
-			name = Extensions;
 			sourceTree = "<group>";
 		};
 		15D8757528B2488F00BFA940 /* Directions */ = {
 			isa = PBXGroup;
 			children = (
 				15D8757B28B2AA8400BFA940 /* DirectionsController.swift */,
+				15D8758028B35A2500BFA940 /* LocationSearchController.swift */,
 			);
 			path = Directions;
 			sourceTree = "<group>";
@@ -201,6 +188,7 @@
 				15D8756F28B0DB0300BFA940 /* Extensions.swift in Sources */,
 				15D8757C28B2AA8400BFA940 /* DirectionsController.swift in Sources */,
 				153EDA2828AB81CF0078F8CD /* AppDelegate.swift in Sources */,
+				15D8758128B35A2500BFA940 /* LocationSearchController.swift in Sources */,
 				153EDA2A28AB81CF0078F8CD /* SceneDelegate.swift in Sources */,
 				153EDA2C28AB81CF0078F8CD /* ContentView.swift in Sources */,
 				153EDA3D28AB83660078F8CD /* MainViewController.swift in Sources */,

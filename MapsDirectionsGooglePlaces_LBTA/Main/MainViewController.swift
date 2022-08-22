@@ -22,13 +22,11 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        setupRegionForMap()
         setupMapView()
         setupSearchUI()
         setupLocationsCarousel()
         performLocalSearch()
         requestUserlocation()
-        
     }
     
     fileprivate func requestUserlocation() {
@@ -53,16 +51,6 @@ class MainViewController: UIViewController {
         // listen for text changes and then perform new search
         // OLD SCHOOL
         searchTextField.addTarget(self, action: #selector(handleSearchChanges), for: .editingChanged)
-        
-        
-        // NEW SCHOOL Search Throttling
-        // search on the last keystroke of text changes and basically wait 500 milliseconds
-//        _ = NotificationCenter.default
-//            .publisher(for: UITextField.textDidChangeNotification, object: searchTextField)
-//            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
-//            .sink { (_) in
-//                self.performLocalSearch()
-//            }
     }
     
     fileprivate func setupLocationsCarousel() {
@@ -119,13 +107,40 @@ class MainViewController: UIViewController {
         
         
     }
+}
+
+extension MainViewController: MKMapViewDelegate, CLLocationManagerDelegate {
     
-//    fileprivate func setupRegionForMap() {
-//        let centerCoordinate = CLLocationCoordinate2D(latitude: 39.803729242358195, longitude: -104.97505054145867)
-//        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-//        let region = MKCoordinateRegion(center: centerCoordinate, span: span)
-//        mapView.setRegion(region, animated: true)
-//    }
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        guard let customAnnotation = view.annotation as? CustomMapItemAnnotation else { return }
+        guard let index = locationsController.items.firstIndex(where: {$0.name == customAnnotation.mapItem?.name}) else { return }
+        locationsController.collectionView.scrollToItem(at: [0, index], at: .centeredHorizontally, animated: true)
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if (annotation is MKPointAnnotation) {
+            let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "id")
+            annotationView.canShowCallout = true
+            return annotationView
+        }
+        return nil
+    }
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse:
+            print("Recieved authorization of a user location")
+            locationManager.startUpdatingLocation()
+        default:
+            print("Failed to authorize")
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let firstLocation = locations.first else { return }
+        mapView.setRegion(.init(center: firstLocation.coordinate, span: .init(latitudeDelta: 0.1, longitudeDelta: 0.1)), animated: false)
+//        locationManager.stopUpdatingLocation()
+    }
 }
 
 

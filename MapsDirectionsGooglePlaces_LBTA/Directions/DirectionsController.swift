@@ -39,11 +39,11 @@ class DirectionsController: UIViewController {
     fileprivate func setupStartEndDummyAnnotations() {
         let startAnnotation = MKPointAnnotation()
         startAnnotation.coordinate = .init(latitude: 37.7666, longitude: -122.427290)
-        startAnnotation.title = "Start"
+//        startAnnotation.title = "Start"
         
         let endAnnotation = MKPointAnnotation()
         endAnnotation.coordinate = .init(latitude: 37.331352, longitude: -122.030331)
-        endAnnotation.title = "End"
+//        endAnnotation.title = "End"
         
         mapView.addAnnotation(startAnnotation)
         mapView.addAnnotation(endAnnotation)
@@ -110,23 +110,25 @@ class DirectionsController: UIViewController {
         
         startTextField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleChangeStartLocation)))
         
+        endTextField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleChangeEndLocation)))
+        
         navigationController?.navigationBar.isHidden = true
     }
     
     @objc fileprivate func handleChangeStartLocation() {
-        let vc = UIViewController()
-        vc.view.backgroundColor = .yellow
-        
-        // temp hack
-        let button = UIButton(title: "BACK", titleColor: .black, font: .boldSystemFont(ofSize: 14), backgroundColor: .clear, target: self, action: #selector(handleBack))
-        vc.view.addSubview(button)
-        button.fillSuperview()
-        
+        let vc = LocationSearchController()
+        vc.selectionHandler = { [weak self] mapItem in
+            self?.startTextField.text = mapItem.name
+        }
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    @objc func handleBack() {
-        navigationController?.popViewController(animated: true)
+    @objc fileprivate func handleChangeEndLocation() {
+        let vc = LocationSearchController()
+        vc.selectionHandler = { [weak self] mapItem in
+            self?.endTextField.text = mapItem.name
+        }
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     fileprivate func setupRegionForMap() {

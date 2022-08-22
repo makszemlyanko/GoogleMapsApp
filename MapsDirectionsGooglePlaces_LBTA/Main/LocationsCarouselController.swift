@@ -19,7 +19,6 @@ class LocationCell: LBTAListCell<MKMapItem> {
     }
     
     let locationLabel = UILabel(text: "Location", font: .boldSystemFont(ofSize: 16))
-    
     let addressLabel = UILabel(text: "Address", numberOfLines: 0)
     
     override func setupViews() {
@@ -39,15 +38,6 @@ class LocationsCarouselController: LBTAListController<LocationCell, MKMapItem> {
         super.viewDidLoad()
         collectionView.backgroundColor = .clear
         collectionView.clipsToBounds = false
-        
-//        let placemark = MKPlacemark(coordinate: .init(latitude: 10, longitude: 55))
-//        let dummyMapItem = MKMapItem(placemark: placemark)
-//        dummyMapItem.name = "Dummy location for example"
-//        self.items = [dummyMapItem]
-        
-//        self.items = ["1", "2", "3"]
-        
-        
     }
 }
 
