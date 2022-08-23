@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1510F76A28B50CFC00FC8765 /* RouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1510F76928B50CFC00FC8765 /* RouteViewController.swift */; };
 		153EDA2828AB81CF0078F8CD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153EDA2728AB81CF0078F8CD /* AppDelegate.swift */; };
 		153EDA2A28AB81CF0078F8CD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153EDA2928AB81CF0078F8CD /* SceneDelegate.swift */; };
 		153EDA2C28AB81CF0078F8CD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153EDA2B28AB81CF0078F8CD /* ContentView.swift */; };
@@ -23,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1510F76928B50CFC00FC8765 /* RouteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteViewController.swift; sourceTree = "<group>"; };
 		153EDA2428AB81CF0078F8CD /* MapsDirectionsGooglePlaces_LBTA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapsDirectionsGooglePlaces_LBTA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		153EDA2728AB81CF0078F8CD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		153EDA2928AB81CF0078F8CD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 			children = (
 				15D8757B28B2AA8400BFA940 /* DirectionsController.swift */,
 				15D8758028B35A2500BFA940 /* LocationSearchController.swift */,
+				1510F76928B50CFC00FC8765 /* RouteViewController.swift */,
 			);
 			path = Directions;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 				15D8757C28B2AA8400BFA940 /* DirectionsController.swift in Sources */,
 				153EDA2828AB81CF0078F8CD /* AppDelegate.swift in Sources */,
 				15D8758128B35A2500BFA940 /* LocationSearchController.swift in Sources */,
+				1510F76A28B50CFC00FC8765 /* RouteViewController.swift in Sources */,
 				153EDA2A28AB81CF0078F8CD /* SceneDelegate.swift in Sources */,
 				153EDA2C28AB81CF0078F8CD /* ContentView.swift in Sources */,
 				153EDA3D28AB83660078F8CD /* MainViewController.swift in Sources */,

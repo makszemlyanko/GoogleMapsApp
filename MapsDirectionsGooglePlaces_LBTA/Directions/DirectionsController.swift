@@ -45,41 +45,9 @@ class DirectionsController: UIViewController {
     
     @objc fileprivate func handleShowRoute() {
         let routeViewController = RouteViewController()
+        routeViewController.route = currentlyShowingRoute
         routeViewController.items = currentlyShowingRoute?.steps.filter({!$0.instructions.isEmpty}) ?? [] // filter empty rows
         present(routeViewController, animated: true)
-    }
-    
-    class RouteCell: LBTAListCell<MKRoute.Step> {
-        
-        override var item: MKRoute.Step! {
-            didSet {
-                nameLabel.text = item.instructions
-                let kilometersConversion = item.distance / 1000
-                distanceLabel.text = String(format: "%.2f km", kilometersConversion)
-            }
-        }
-        
-        let nameLabel = UILabel(numberOfLines: 2)
-        let distanceLabel = UILabel(font: .systemFont(ofSize: 14), textColor: .lightGray, textAlignment: .right)
-        
-        override func setupViews() {
-            hstack(nameLabel, distanceLabel.withWidth(80)).withMargins(.allSides(16))
-            addSeparatorView(leftPadding: 16)
-        }
-        
-    }
-    
-    
-    class RouteViewController: LBTAListController<RouteCell, MKRoute.Step>, UICollectionViewDelegateFlowLayout {
-        
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            
-        }
-        
-        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            .init(width: view.frame.width - 16, height: 70)
-        }
     }
     
     fileprivate func setupMapView() {
@@ -87,7 +55,7 @@ class DirectionsController: UIViewController {
         mapView.showsUserLocation = true
         mapView.delegate = self
     }
-    
+
     fileprivate func requestForDirections() {
         
         let request = MKDirections.Request()
