@@ -23,15 +23,63 @@ class DirectionsController: UIViewController {
     var startMapItem: MKMapItem?
     var endMapItem: MKMapItem?
     
+    var currentlyShowingRoute: MKRoute?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(mapView)
         setupNavBarUI()
         setupMapView()
         setupRegionForMap() // San Francisco
-//        setupStartEndDummyAnnotations()
-//        requestForDirections()
+        setupRouteButton()
+    }
+    
+    fileprivate func setupRouteButton() {
+        let routeButton = UIButton(title: "Route", titleColor: .black, font: .boldSystemFont(ofSize: 16), backgroundColor: .white, target: self, action: #selector(handleShowRoute))
+        view.addSubview(routeButton)
+        routeButton.layer.opacity = 0.8
+        routeButton.layer.cornerRadius = 5
+        routeButton.setupShadow(opacity: 0.2, radius: 5)
+        routeButton.anchor(top: nil, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, padding: .allSides(16), size: .init(width: 0, height: 50))
+    }
+    
+    @objc fileprivate func handleShowRoute() {
+        let routeViewController = RouteViewController()
+        routeViewController.items = currentlyShowingRoute?.steps.filter({!$0.instructions.isEmpty}) ?? [] // filter empty rows
+        present(routeViewController, animated: true)
+    }
+    
+    class RouteCell: LBTAListCell<MKRoute.Step> {
         
+        override var item: MKRoute.Step! {
+            didSet {
+                nameLabel.text = item.instructions
+                let kilometersConversion = item.distance / 1000
+                distanceLabel.text = String(format: "%.2f km", kilometersConversion)
+            }
+        }
+        
+        let nameLabel = UILabel(numberOfLines: 2)
+        let distanceLabel = UILabel(font: .systemFont(ofSize: 14), textColor: .lightGray, textAlignment: .right)
+        
+        override func setupViews() {
+            hstack(nameLabel, distanceLabel.withWidth(80)).withMargins(.allSides(16))
+            addSeparatorView(leftPadding: 16)
+        }
+        
+    }
+    
+    
+    class RouteViewController: LBTAListController<RouteCell, MKRoute.Step>, UICollectionViewDelegateFlowLayout {
+        
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            .init(width: view.frame.width - 16, height: 70)
+        }
     }
     
     fileprivate func setupMapView() {
@@ -40,22 +88,8 @@ class DirectionsController: UIViewController {
         mapView.delegate = self
     }
     
-    fileprivate func setupStartEndDummyAnnotations() {
-        let startAnnotation = MKPointAnnotation()
-        startAnnotation.coordinate = .init(latitude: 37.7666, longitude: -122.427290)
-//        startAnnotation.title = "Start"
-        
-        let endAnnotation = MKPointAnnotation()
-        endAnnotation.coordinate = .init(latitude: 37.331352, longitude: -122.030331)
-//        endAnnotation.title = "End"
-        
-        mapView.addAnnotation(startAnnotation)
-        mapView.addAnnotation(endAnnotation)
-        
-        mapView.showAnnotations(mapView.annotations, animated: true)
-    }
-    
     fileprivate func requestForDirections() {
+        
         let request = MKDirections.Request()
         request.source = startMapItem
         request.destination = endMapItem
@@ -64,22 +98,23 @@ class DirectionsController: UIViewController {
         hud.textLabel.text = "Routing..."
         hud.show(in: view)
         
-        let directions = MKDirections(request: request)
-        directions.calculate { (resp, err) in
-            
-            hud.dismiss()
-            
-            if let err = err {
-                print("Failed to find routing info:", err)
-                return
+            let directions = MKDirections(request: request)
+            directions.calculate { (resp, err) in
+                
+                hud.dismiss()
+                
+                if let err = err {
+                    print("Failed to find routing info:", err)
+                    return
+                }
+                
+                // success
+                if let firstRoute = resp?.routes.first {
+                    self.mapView.addOverlay(firstRoute.polyline)
+                }
+                
+                self.currentlyShowingRoute = resp?.routes.first
             }
-            
-            // success
-            print("Found my directions/routing....")
-            resp?.routes.forEach({ (route) in
-                self.mapView.addOverlay(route.polyline)
-            })
-        }
     }
     
     fileprivate func setupNavBarUI() {

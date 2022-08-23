@@ -49,7 +49,6 @@ class MainViewController: UIViewController {
         whiteContainer.stack(searchTextField).withMargins(.allSides(16))
         
         // listen for text changes and then perform new search
-        // OLD SCHOOL
         searchTextField.addTarget(self, action: #selector(handleSearchChanges), for: .editingChanged)
     }
     

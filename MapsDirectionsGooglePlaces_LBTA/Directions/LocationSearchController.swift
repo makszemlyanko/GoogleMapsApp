@@ -31,6 +31,7 @@ class LocationSearchCell: LBTAListCell<MKMapItem> {
 class LocationSearchController: LBTAListController<LocationSearchCell, MKMapItem> {
     
     var selectionHandler: ((MKMapItem) -> ())?
+    
     let searchTextField = IndentedTextField(placeholder: "Enter search term", padding: 12, backgroundColor: .white)
     let backIcon = UIButton(image: #imageLiteral(resourceName: "back_arrow"), tintColor: .white, target: self, action: #selector(handleBack)).withWidth(32)
     let navBarHeight: CGFloat = 66
@@ -63,6 +64,7 @@ class LocationSearchController: LBTAListController<LocationSearchCell, MKMapItem
     
     fileprivate func setupSearchListener() {
         searchTextField.addTarget(self, action: #selector(handleSearchChanges), for: .editingChanged)
+
     }
     
     @objc fileprivate func handleSearchChanges() {
