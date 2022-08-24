@@ -22,7 +22,7 @@ class RouteHeader: UICollectionReusableView {
                                      distanceLabel,
                                      estimatedTimeLabel,
                                      spacing: 8),
-                               alignment: .center).withMargins(.init(top: 16, left: 24, bottom: 16, right: 0))
+                               alignment: .center).withMargins(.init(top: 16, left: 24, bottom: 16, right: 16))
         addSubview(stackView)
         
     }

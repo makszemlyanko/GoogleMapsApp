@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1510F76A28B50CFC00FC8765 /* RouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1510F76928B50CFC00FC8765 /* RouteViewController.swift */; };
+		1510F76D28B6036200FC8765 /* MapKitAdressExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1510F76C28B6036100FC8765 /* MapKitAdressExtension.swift */; };
+		1510F78228B6473100FC8765 /* MapSearchingVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1510F78128B6473100FC8765 /* MapSearchingVIew.swift */; };
 		153EDA2828AB81CF0078F8CD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153EDA2728AB81CF0078F8CD /* AppDelegate.swift */; };
 		153EDA2A28AB81CF0078F8CD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153EDA2928AB81CF0078F8CD /* SceneDelegate.swift */; };
 		153EDA2C28AB81CF0078F8CD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153EDA2B28AB81CF0078F8CD /* ContentView.swift */; };
@@ -16,7 +18,6 @@
 		153EDA3428AB81D30078F8CD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 153EDA3228AB81D30078F8CD /* LaunchScreen.storyboard */; };
 		153EDA3D28AB83660078F8CD /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153EDA3C28AB83660078F8CD /* MainViewController.swift */; };
 		153EDA4528AB88750078F8CD /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = 153EDA4428AB88750078F8CD /* LBTATools */; };
-		15D8756F28B0DB0300BFA940 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8756E28B0DB0300BFA940 /* Extensions.swift */; };
 		15D8757328B0DBC100BFA940 /* LocationsCarouselController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8757228B0DBC100BFA940 /* LocationsCarouselController.swift */; };
 		15D8757C28B2AA8400BFA940 /* DirectionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8757B28B2AA8400BFA940 /* DirectionsController.swift */; };
 		15D8758128B35A2500BFA940 /* LocationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8758028B35A2500BFA940 /* LocationSearchController.swift */; };
@@ -25,6 +26,8 @@
 
 /* Begin PBXFileReference section */
 		1510F76928B50CFC00FC8765 /* RouteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteViewController.swift; sourceTree = "<group>"; };
+		1510F76C28B6036100FC8765 /* MapKitAdressExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapKitAdressExtension.swift; sourceTree = "<group>"; };
+		1510F78128B6473100FC8765 /* MapSearchingVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchingVIew.swift; sourceTree = "<group>"; };
 		153EDA2428AB81CF0078F8CD /* MapsDirectionsGooglePlaces_LBTA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapsDirectionsGooglePlaces_LBTA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		153EDA2728AB81CF0078F8CD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		153EDA2928AB81CF0078F8CD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -34,7 +37,6 @@
 		153EDA3328AB81D30078F8CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		153EDA3528AB81D30078F8CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		153EDA3C28AB83660078F8CD /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		15D8756E28B0DB0300BFA940 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		15D8757228B0DBC100BFA940 /* LocationsCarouselController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsCarouselController.swift; sourceTree = "<group>"; };
 		15D8757B28B2AA8400BFA940 /* DirectionsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectionsController.swift; sourceTree = "<group>"; };
 		15D8758028B35A2500BFA940 /* LocationSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchController.swift; sourceTree = "<group>"; };
@@ -53,6 +55,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1510F78028B646F900FC8765 /* SwiftUIComponents */ = {
+			isa = PBXGroup;
+			children = (
+				1510F78128B6473100FC8765 /* MapSearchingVIew.swift */,
+			);
+			path = SwiftUIComponents;
+			sourceTree = "<group>";
+		};
 		153EDA1B28AB81CF0078F8CD = {
 			isa = PBXGroup;
 			children = (
@@ -72,7 +82,7 @@
 		153EDA2628AB81CF0078F8CD /* MapsDirectionsGooglePlaces_LBTA */ = {
 			isa = PBXGroup;
 			children = (
-				15D8756E28B0DB0300BFA940 /* Extensions.swift */,
+				1510F78028B646F900FC8765 /* SwiftUIComponents */,
 				15D8757528B2488F00BFA940 /* Directions */,
 				15D8756C28B0DAD300BFA940 /* Main */,
 				153EDA2728AB81CF0078F8CD /* AppDelegate.swift */,
@@ -99,6 +109,7 @@
 			children = (
 				153EDA3C28AB83660078F8CD /* MainViewController.swift */,
 				15D8757228B0DBC100BFA940 /* LocationsCarouselController.swift */,
+				1510F76C28B6036100FC8765 /* MapKitAdressExtension.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -192,11 +203,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				15D8757328B0DBC100BFA940 /* LocationsCarouselController.swift in Sources */,
-				15D8756F28B0DB0300BFA940 /* Extensions.swift in Sources */,
 				15D8757C28B2AA8400BFA940 /* DirectionsController.swift in Sources */,
+				1510F76D28B6036200FC8765 /* MapKitAdressExtension.swift in Sources */,
 				153EDA2828AB81CF0078F8CD /* AppDelegate.swift in Sources */,
 				15D8758128B35A2500BFA940 /* LocationSearchController.swift in Sources */,
 				1510F76A28B50CFC00FC8765 /* RouteViewController.swift in Sources */,
+				1510F78228B6473100FC8765 /* MapSearchingVIew.swift in Sources */,
 				153EDA2A28AB81CF0078F8CD /* SceneDelegate.swift in Sources */,
 				153EDA2C28AB81CF0078F8CD /* ContentView.swift in Sources */,
 				153EDA3D28AB83660078F8CD /* MainViewController.swift in Sources */,

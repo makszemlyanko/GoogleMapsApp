@@ -1,8 +1,8 @@
 //
-//  Extensions.swift
+//  MapKitAdressExtension.swift
 //  MapsDirectionsGooglePlaces_LBTA
 //
-//  Created by Maks Kokos on 20.08.2022.
+//  Created by Maks Kokos on 24.08.2022.
 //
 
 import Foundation
@@ -33,4 +33,3 @@ extension MKMapItem {
         return addressString
     }
 }
-
