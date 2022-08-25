@@ -12,13 +12,17 @@ struct MapViewContainer: UIViewRepresentable {
     
     let mapView = MKMapView()
     
+    var annotations = [MKPointAnnotation]()
+    
     func makeUIView(context: Context) -> MKMapView {
         setupRegionForMap()
         return mapView
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
-        //
+        uiView.removeAnnotations(uiView.annotations)
+        uiView.addAnnotations(annotations)
+        uiView.showAnnotations(uiView.annotations, animated: false)
     }
     
     fileprivate func setupRegionForMap() {
@@ -32,28 +36,56 @@ struct MapViewContainer: UIViewRepresentable {
 }
 
 struct MapSearchingVIew: View {
+
+    @State var annotations = [MKPointAnnotation]()
     
     var body: some View {
         ZStack(alignment: .top) {
-            MapViewContainer()
+            MapViewContainer(annotations: annotations)
                 .ignoresSafeArea(.all)
             HStack {
                 Button(action: {
-                    
+                    self.performSearch(query: "airport")
                 }, label: {
                     Text("Search for airports")
                         .padding()
                         .background(Color.white)
                 })
                 Button(action: {
-                    
+                    self.annotations = []
                 }, label: {
-                    Text("Search for airports")
+                    Text("Clear Annotations")
                         .padding()
                         .background(Color.white)
                 })
             }.shadow(radius: 3)
         }
+    }
+    
+    fileprivate func performSearch(query: String) {
+        // perform an airport search
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = query
+        let localSearch = MKLocalSearch(request: request)
+        localSearch.start { (response, error) in
+            if let error = error {
+                print("Failed to search: ", error)
+                return
+            }
+            
+            var airportAnnotations = [MKPointAnnotation]()
+            
+            response?.mapItems.forEach({ (item) in
+                let annotation = MKPointAnnotation()
+                annotation.title = item.name
+                annotation.coordinate = item.placemark.coordinate
+                airportAnnotations.append(annotation)
+            })
+            
+            self.annotations = airportAnnotations
+            
+        }
+
     }
 }
 
