@@ -10,19 +10,14 @@ import MapKit
 
 struct MapViewContainer: UIViewRepresentable {
     
-    let mapView = MKMapView()
-    
     var annotations = [MKPointAnnotation]()
     
-    func makeUIView(context: Context) -> MKMapView {
+    let mapView = MKMapView()
+    
+    // treat this as your setup area
+    func makeUIView(context: UIViewRepresentableContext<MapViewContainer>) -> MKMapView {
         setupRegionForMap()
         return mapView
-    }
-    
-    func updateUIView(_ uiView: MKMapView, context: Context) {
-        uiView.removeAnnotations(uiView.annotations)
-        uiView.addAnnotations(annotations)
-        uiView.showAnnotations(uiView.annotations, animated: false)
     }
     
     fileprivate func setupRegionForMap() {
@@ -32,78 +27,110 @@ struct MapViewContainer: UIViewRepresentable {
         mapView.setRegion(region, animated: true)
     }
     
+    func updateUIView(_ uiView: MKMapView, context: UIViewRepresentableContext<MapViewContainer>) {
+        uiView.removeAnnotations(uiView.annotations)
+        uiView.addAnnotations(annotations)
+        uiView.showAnnotations(uiView.annotations, animated: false)
+    }
+    
     typealias UIViewType = MKMapView
+    
+    
 }
 
+import Combine
 
+// keep track of properties that your view needs to render
 class MapSearchingViewModel: ObservableObject {
     
     @Published var annotations = [MKPointAnnotation]()
     @Published var isSearching = false
+    @Published var searchQuery = "" {
+        didSet {
+//            print("Search query changing:", _searchQuery)
+//            performSearch(query: searchQuery)
+        }
+    }
+    
+    var cancellable: AnyCancellable?
+    
+    init() {
+        print("Initializing view model")
+        // combine code
+        cancellable = $searchQuery.debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .sink { [weak self] (searchTerm) in
+                self?.performSearch(query: searchTerm)
+        }
+    }
     
     fileprivate func performSearch(query: String) {
-        // perform an airport search
         isSearching = true
+        
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
+        
         let localSearch = MKLocalSearch(request: request)
-        localSearch.start { (response, error) in
-            if let error = error {
-                print("Failed to search: ", error)
-                return
-            }
+        localSearch.start { (resp, err) in
+            // handle your error
             
             var airportAnnotations = [MKPointAnnotation]()
             
-            response?.mapItems.forEach({ (item) in
+            resp?.mapItems.forEach({ (mapItem) in
+                print(mapItem.name ?? "")
                 let annotation = MKPointAnnotation()
-                annotation.title = item.name
-                annotation.coordinate = item.placemark.coordinate
+                annotation.title = mapItem.name
+                annotation.coordinate = mapItem.placemark.coordinate
                 airportAnnotations.append(annotation)
             })
-            Thread.sleep(forTimeInterval: 1)
+            
+//            Thread.sleep(forTimeInterval: 1)
             self.isSearching = false
+            
             self.annotations = airportAnnotations
         }
     }
 }
 
-struct MapSearchingVIew: View {
+
+struct MapSearchingView: View {
     
     @ObservedObject var vm = MapSearchingViewModel()
     
+//    @State var searchQuery = ""
+    
     var body: some View {
         ZStack(alignment: .top) {
+            
             MapViewContainer(annotations: vm.annotations)
-                .ignoresSafeArea(.all)
+                .edgesIgnoringSafeArea(.all)
+            
             VStack(spacing: 12) {
                 HStack {
-                    Button(action: {
-                        self.vm.performSearch(query: "airport")
-                    }, label: {
-                        Text("Search for airports")
-                            .padding()
-                            .background(Color.white)
-                    })
-                    Button(action: {
-                        self.vm.annotations = []
-                    }, label: {
-                        Text("Clear Annotations")
-                            .padding()
-                            .background(Color.white)
-                    })
+                    TextField("Search terms", text: $vm.searchQuery)
+//                    .padding()
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .background(Color.white)
+                    
+                    
                 }.shadow(radius: 3)
+                    .padding()
+                
                 if vm.isSearching {
                     Text("Searching...")
                 }
+                
             }
         }
+        
     }
+    
 }
 
-struct MapSearchingVIew_Previews: PreviewProvider {
+
+struct MapSearchingView_Previews: PreviewProvider {
     
     static var previews: some View {
-        MapSearchingVIew()
+        MapSearchingView()
     }
 }
