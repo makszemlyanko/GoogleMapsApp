@@ -35,35 +35,15 @@ struct MapViewContainer: UIViewRepresentable {
     typealias UIViewType = MKMapView
 }
 
-struct MapSearchingVIew: View {
 
-    @State var annotations = [MKPointAnnotation]()
+class MapSearchingViewModel: ObservableObject {
     
-    var body: some View {
-        ZStack(alignment: .top) {
-            MapViewContainer(annotations: annotations)
-                .ignoresSafeArea(.all)
-            HStack {
-                Button(action: {
-                    self.performSearch(query: "airport")
-                }, label: {
-                    Text("Search for airports")
-                        .padding()
-                        .background(Color.white)
-                })
-                Button(action: {
-                    self.annotations = []
-                }, label: {
-                    Text("Clear Annotations")
-                        .padding()
-                        .background(Color.white)
-                })
-            }.shadow(radius: 3)
-        }
-    }
+    @Published var annotations = [MKPointAnnotation]()
+    @Published var isSearching = false
     
     fileprivate func performSearch(query: String) {
         // perform an airport search
+        isSearching = true
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
         let localSearch = MKLocalSearch(request: request)
@@ -81,11 +61,43 @@ struct MapSearchingVIew: View {
                 annotation.coordinate = item.placemark.coordinate
                 airportAnnotations.append(annotation)
             })
-            
+            Thread.sleep(forTimeInterval: 1)
+            self.isSearching = false
             self.annotations = airportAnnotations
-            
         }
+    }
+}
 
+struct MapSearchingVIew: View {
+    
+    @ObservedObject var vm = MapSearchingViewModel()
+    
+    var body: some View {
+        ZStack(alignment: .top) {
+            MapViewContainer(annotations: vm.annotations)
+                .ignoresSafeArea(.all)
+            VStack(spacing: 12) {
+                HStack {
+                    Button(action: {
+                        self.vm.performSearch(query: "airport")
+                    }, label: {
+                        Text("Search for airports")
+                            .padding()
+                            .background(Color.white)
+                    })
+                    Button(action: {
+                        self.vm.annotations = []
+                    }, label: {
+                        Text("Clear Annotations")
+                            .padding()
+                            .background(Color.white)
+                    })
+                }.shadow(radius: 3)
+                if vm.isSearching {
+                    Text("Searching...")
+                }
+            }
+        }
     }
 }
 
