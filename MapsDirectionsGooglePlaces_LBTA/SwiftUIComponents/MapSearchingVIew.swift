@@ -12,6 +12,8 @@ struct MapViewContainer: UIViewRepresentable {
     
     var annotations = [MKPointAnnotation]()
     
+    var selectedMapItem: MKMapItem?
+    
     let mapView = MKMapView()
     
     // treat this as your setup area
@@ -21,7 +23,7 @@ struct MapViewContainer: UIViewRepresentable {
     }
     
     fileprivate func setupRegionForMap() {
-        let centerCoordinate = CLLocationCoordinate2D(latitude: 37.7666, longitude: -122.427290)
+        let centerCoordinate = CLLocationCoordinate2D(latitude: 37.773972, longitude: -122.431297)
         let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
         let region = MKCoordinateRegion(center: centerCoordinate, span: span)
         mapView.setRegion(region, animated: true)
@@ -31,6 +33,12 @@ struct MapViewContainer: UIViewRepresentable {
         uiView.removeAnnotations(uiView.annotations)
         uiView.addAnnotations(annotations)
         uiView.showAnnotations(uiView.annotations, animated: false)
+        
+        uiView.annotations.forEach { (annotation) in
+            if annotation.title == selectedMapItem?.name {
+                uiView.selectAnnotation(annotation, animated: true)
+            }
+        }
     }
     
     typealias UIViewType = MKMapView
@@ -45,12 +53,9 @@ class MapSearchingViewModel: ObservableObject {
     
     @Published var annotations = [MKPointAnnotation]()
     @Published var isSearching = false
-    @Published var searchQuery = "" {
-        didSet {
-//            print("Search query changing:", _searchQuery)
-//            performSearch(query: searchQuery)
-        }
-    }
+    @Published var searchQuery = ""
+    @Published var mapItems = [MKMapItem]()
+    @Published var selectedMapItem: MKMapItem?
     
     var cancellable: AnyCancellable?
     
@@ -72,6 +77,8 @@ class MapSearchingViewModel: ObservableObject {
         let localSearch = MKLocalSearch(request: request)
         localSearch.start { (resp, err) in
             // handle your error
+            
+            self.mapItems = resp?.mapItems ?? []
             
             var airportAnnotations = [MKPointAnnotation]()
             
@@ -101,7 +108,7 @@ struct MapSearchingView: View {
     var body: some View {
         ZStack(alignment: .top) {
             
-            MapViewContainer(annotations: vm.annotations)
+            MapViewContainer(annotations: vm.annotations, selectedMapItem: vm.selectedMapItem)
                 .edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 12) {
@@ -119,6 +126,32 @@ struct MapSearchingView: View {
                 if vm.isSearching {
                     Text("Searching...")
                 }
+                
+                Spacer()
+                
+                ScrollView(.horizontal) {
+                    HStack(spacing: 16) {
+                        ForEach(vm.mapItems, id: \.self) { item in
+          
+                            Button(action: {
+                                self.vm.selectedMapItem = item
+                            }, label: {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(item.name ?? "")
+                                        .font(.headline)
+                                    Text(item.placemark.title!)
+                                }
+                            }).foregroundColor(.black)
+                            
+                            
+                            .padding()
+                            .frame(width: 250)
+                            .background(Color.white)
+                            .cornerRadius(5)
+                        }
+                    }.padding(.horizontal, 16)
+                }.shadow(radius: 5)
+                
                 
             }
         }
