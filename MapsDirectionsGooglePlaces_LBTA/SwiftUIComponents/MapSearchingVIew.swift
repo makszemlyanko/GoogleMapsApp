@@ -11,14 +11,14 @@ import MapKit
 struct MapViewContainer: UIViewRepresentable {
     
     var annotations = [MKPointAnnotation]()
-    
     var selectedMapItem: MKMapItem?
-    
     let mapView = MKMapView()
+    var currentLocation = CLLocationCoordinate2D()
     
     // treat this as your setup area
     func makeUIView(context: UIViewRepresentableContext<MapViewContainer>) -> MKMapView {
-        setupRegionForMap()
+//        setupRegionForMap()
+        mapView.showsUserLocation = true
         return mapView
     }
     
@@ -35,6 +35,9 @@ struct MapViewContainer: UIViewRepresentable {
         }
         
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            
+            if !(annotation is MKPointAnnotation) { return nil } // blue dot current location appear
+            
             let pinAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "id")
             pinAnnotationView.canShowCallout = true
             return pinAnnotationView
@@ -49,41 +52,104 @@ struct MapViewContainer: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: MKMapView, context: UIViewRepresentableContext<MapViewContainer>) {
-        uiView.removeAnnotations(uiView.annotations)
-        uiView.addAnnotations(annotations)
-        uiView.showAnnotations(uiView.annotations, animated: false)
+        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        let region = MKCoordinateRegion(center: currentLocation, span: span)
+        uiView.setRegion(region, animated: true)
+        
+        if annotations.count == 0 {
+            uiView.removeAnnotations(uiView.annotations)
+            return
+        }
+        
+        if shouldRefreshAnnotations(mapView: uiView) {
+            uiView.removeAnnotations(uiView.annotations)
+            uiView.addAnnotations(annotations)
+            uiView.showAnnotations(uiView.annotations, animated: false)
+        }
         
         uiView.annotations.forEach { (annotation) in
             if annotation.title == selectedMapItem?.name {
                 uiView.selectAnnotation(annotation, animated: true)
             }
         }
+        
+    }
+    
+    // This checks to see whether or not annotations have changed.  The algorithm generates a hashmap/dictionary for all the annotations and then goes through the map to check if they exist. If it doesn't currently exist, we treat this as a need to refresh the map
+    fileprivate func shouldRefreshAnnotations(mapView: MKMapView) -> Bool {
+        let grouped = Dictionary(grouping: mapView.annotations, by: { $0.title ?? ""})
+        for (_, annotation) in annotations.enumerated() {
+            if grouped[annotation.title ?? ""] == nil {
+                return true
+            }
+        }
+        return false
     }
     
     typealias UIViewType = MKMapView
-    
-    
 }
 
 import Combine
 
 // keep track of properties that your view needs to render
-class MapSearchingViewModel: ObservableObject {
+class MapSearchingViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     @Published var annotations = [MKPointAnnotation]()
     @Published var isSearching = false
     @Published var searchQuery = ""
     @Published var mapItems = [MKMapItem]()
     @Published var selectedMapItem: MKMapItem?
+    @Published var keyboardHeight: CGFloat = 0
+    @Published var currentLocation = CLLocationCoordinate2D()
     
     var cancellable: AnyCancellable?
     
-    init() {
+    let locationManager = CLLocationManager()
+    
+    override init() {
+        super.init()
         print("Initializing view model")
         // combine code
         cancellable = $searchQuery.debounce(for: .milliseconds(500), scheduler: RunLoop.main)
             .sink { [weak self] (searchTerm) in
                 self?.performSearch(query: searchTerm)
+        }
+        
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        
+        listenForKeyboardNotifications()
+        
+    }
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        if manager.authorizationStatus == .authorizedWhenInUse {
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let firstLocation = locations.first else { return }
+        self.currentLocation = firstLocation.coordinate
+    }
+    
+    fileprivate func listenForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { [weak self] (notification) in
+            guard let value = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+            let keyboardFrame = value.cgRectValue
+            let window = UIApplication.shared.windows.filter{$0.isKeyWindow}.first
+            
+            withAnimation(.easeOut(duration: 0.25)) {
+                self?.keyboardHeight = keyboardFrame.height - window!.safeAreaInsets.bottom
+            }
+            print(keyboardFrame.height)
+        }
+        
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { [weak self] (notification) in
+            withAnimation(.easeOut(duration: 0.25)) {
+                self?.keyboardHeight = 0
+            }
+            
         }
     }
     
@@ -127,7 +193,9 @@ struct MapSearchingView: View {
     var body: some View {
         ZStack(alignment: .top) {
             
-            MapViewContainer(annotations: vm.annotations, selectedMapItem: vm.selectedMapItem)
+            MapViewContainer(annotations: vm.annotations,
+                             selectedMapItem: vm.selectedMapItem,
+                             currentLocation: vm.currentLocation)
                 .edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 12) {
