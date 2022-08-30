@@ -22,6 +22,7 @@
 		15D8757C28B2AA8400BFA940 /* DirectionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8757B28B2AA8400BFA940 /* DirectionsController.swift */; };
 		15D8758128B35A2500BFA940 /* LocationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8758028B35A2500BFA940 /* LocationSearchController.swift */; };
 		15D8758728B3A1DD00BFA940 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 15D8758628B3A1DD00BFA940 /* JGProgressHUD */; };
+		15E97DEF28BE485C0019B514 /* DirectionsSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E97DEE28BE485C0019B514 /* DirectionsSearchView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		15D8757228B0DBC100BFA940 /* LocationsCarouselController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsCarouselController.swift; sourceTree = "<group>"; };
 		15D8757B28B2AA8400BFA940 /* DirectionsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectionsController.swift; sourceTree = "<group>"; };
 		15D8758028B35A2500BFA940 /* LocationSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchController.swift; sourceTree = "<group>"; };
+		15E97DEE28BE485C0019B514 /* DirectionsSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsSearchView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				1510F78128B6473100FC8765 /* MapSearchingVIew.swift */,
+				15E97DEE28BE485C0019B514 /* DirectionsSearchView.swift */,
 			);
 			path = SwiftUIComponents;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 			files = (
 				15D8757328B0DBC100BFA940 /* LocationsCarouselController.swift in Sources */,
 				15D8757C28B2AA8400BFA940 /* DirectionsController.swift in Sources */,
+				15E97DEF28BE485C0019B514 /* DirectionsSearchView.swift in Sources */,
 				1510F76D28B6036200FC8765 /* MapKitAdressExtension.swift in Sources */,
 				153EDA2828AB81CF0078F8CD /* AppDelegate.swift in Sources */,
 				15D8758128B35A2500BFA940 /* LocationSearchController.swift in Sources */,

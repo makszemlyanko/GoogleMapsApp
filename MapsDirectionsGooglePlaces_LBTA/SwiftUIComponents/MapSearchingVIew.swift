@@ -18,7 +18,6 @@ struct MapViewContainer: UIViewRepresentable {
     
     // treat this as your setup area
     func makeUIView(context: UIViewRepresentableContext<MapViewContainer>) -> MKMapView {
-//        setupRegionForMap()
         mapView.showsUserLocation = true
         return mapView
     }
@@ -202,8 +201,6 @@ struct MapSearchingView: View {
     
     @ObservedObject var vm = MapSearchingViewModel()
     
-//    @State var searchQuery = ""
-    
     var body: some View {
         ZStack(alignment: .top) {
             
@@ -215,7 +212,6 @@ struct MapSearchingView: View {
             VStack(spacing: 12) {
                 HStack {
                     TextField("Search terms", text: $vm.searchQuery)
-//                    .padding()
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
                         .background(Color.white)
@@ -243,8 +239,6 @@ struct MapSearchingView: View {
                                     Text(item.placemark.title!)
                                 }
                             }).foregroundColor(.black)
-                            
-                            
                             .padding()
                             .frame(width: 250)
                             .background(Color.white)
