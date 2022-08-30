@@ -22,6 +22,25 @@ struct MapViewContainer: UIViewRepresentable {
         return mapView
     }
     
+    func makeCoordinator() -> MapViewContainer.Coordinator {
+        return Coordinator(mapView: mapView)
+    }
+    
+    // Custom pin annotation
+    class Coordinator: NSObject, MKMapViewDelegate {
+        
+        init(mapView: MKMapView) {
+            super.init()
+            mapView.delegate = self
+        }
+        
+        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            let pinAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "id")
+            pinAnnotationView.canShowCallout = true
+            return pinAnnotationView
+        }
+    }
+    
     fileprivate func setupRegionForMap() {
         let centerCoordinate = CLLocationCoordinate2D(latitude: 37.773972, longitude: -122.431297)
         let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
