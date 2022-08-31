@@ -24,14 +24,68 @@ struct SelectLocationView: View {
     
     @Binding var isShowing: Bool
     
+    @State var mapItems = [MKMapItem]()
+    
+    @State var searchQuery = ""
+    
     var body: some View {
         VStack {
-            Button(action: {
-                self.isShowing = false
-            }, label: {
-                Text("Dismiss")
-            })
+            HStack(spacing: 16) {
+                Button(action: {
+                    self.isShowing = false
+                }, label: {
+                    Image(uiImage: #imageLiteral(resourceName: "back_arrow"))
+                })
+                
+                TextField("Enter search term", text: self.$searchQuery)
+                    .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification).debounce(for: .milliseconds(500), scheduler: RunLoop.main), perform: { _ in
+                        let request = MKLocalSearch.Request()
+                        request.naturalLanguageQuery = self.searchQuery
+                        let search = MKLocalSearch(request: request)
+                        search.start { (response, error) in
+                            if let error = error {
+                                print("Failed to local search: ", error)
+                                return
+                            }
+                            self.mapItems = response?.mapItems ?? []
+                        }
+                    })
+            }
+            .padding()
+     
+            if mapItems.count > 0 {
+                ScrollView {
+                    ForEach(mapItems, id: \.self) { item in
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text("\(item.name ?? "")")
+                                    .font(.headline)
+                                Text("\(item.adress())")
+                            }
+                            .padding()
+                            Spacer()
+                        }
+                        Divider()
+                    }
+                }
+            }
+            Spacer()
         }
+        .ignoresSafeArea(edges: .bottom)
+//        .onAppear(perform: {
+//            // search
+//            let request = MKLocalSearch.Request()
+//            request.naturalLanguageQuery = "Sushi"
+//            let search = MKLocalSearch(request: request)
+//            search.start { (response, error) in
+//                if let error = error {
+//                    print("Failed to local search: ", error)
+//                    return
+//                }
+//                self.mapItems = response?.mapItems ?? []
+//            }
+//
+//        })
         .navigationBarHidden(true)
     }
 }
