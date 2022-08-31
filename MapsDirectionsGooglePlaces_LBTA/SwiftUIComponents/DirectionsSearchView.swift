@@ -7,16 +7,57 @@
 
 import SwiftUI
 import MapKit
+import Combine
 
 struct DirectionsMapView: UIViewRepresentable {
+    
     typealias UIViewType = MKMapView
     
+    @EnvironmentObject var env: DirectionsEnvironment
+    
+    let mapView = MKMapView()
+    
+    class Coordinator: NSObject, MKMapViewDelegate {
+        
+        init(mapView: MKMapView) {
+            super.init()
+            mapView.delegate = self
+        }
+        
+        func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+            let renderer = MKPolylineRenderer(overlay: overlay)
+            renderer.strokeColor = .red
+            renderer.lineWidth = 5
+            return renderer
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(mapView: mapView)
+    }
+    
+    
     func makeUIView(context: Context) -> MKMapView {
-        MKMapView()
+        mapView
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
         
+        uiView.removeOverlays(uiView.overlays)
+        uiView.removeAnnotations(uiView.annotations)
+        
+        [env.sourceMapItem, env.destinationMapItem].compactMap({$0}).forEach { (mapItem) in
+            let annotation = MKPointAnnotation()
+            annotation.title = mapItem.name
+            annotation.coordinate = mapItem.placemark.coordinate
+            uiView.addAnnotation(annotation)
+        }
+        
+        uiView.showAnnotations(uiView.annotations, animated: false)
+        
+        if let route = env.route {
+            uiView.addOverlay(route.polyline)
+        }
     }
 }
 
@@ -86,20 +127,6 @@ struct SelectLocationView: View {
             Spacer()
         }
         .ignoresSafeArea(edges: .bottom)
-//        .onAppear(perform: {
-//            // search
-//            let request = MKLocalSearch.Request()
-//            request.naturalLanguageQuery = "Sushi"
-//            let search = MKLocalSearch(request: request)
-//            search.start { (response, error) in
-//                if let error = error {
-//                    print("Failed to local search: ", error)
-//                    return
-//                }
-//                self.mapItems = response?.mapItems ?? []
-//            }
-//
-//        })
         .navigationBarHidden(true)
     }
 }
@@ -173,6 +200,29 @@ class DirectionsEnvironment: ObservableObject {
     
     @Published var sourceMapItem: MKMapItem?
     @Published var destinationMapItem: MKMapItem?
+    
+    @Published var route: MKRoute?
+    
+    var cancellable: AnyCancellable?
+    
+    init() {
+        // lesten for changes of this items
+        cancellable = Publishers.CombineLatest($sourceMapItem, $destinationMapItem).sink { (items) in
+            
+            // searching for directions
+            let request = MKDirections.Request()
+            request.source = items.0
+            request.destination = items.1
+            let directions = MKDirections(request: request)
+            directions.calculate { [weak self] (response, error) in
+                if let error = error {
+                    print("Failed to calculate route: ", error)
+                    return
+                }
+                self?.route = response?.routes.first
+            }
+        }
+    }
 }
 
 struct DirectionsSearchView_Previews: PreviewProvider {
