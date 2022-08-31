@@ -149,10 +149,41 @@ struct DirectionsSearchView: View {
                 
                 // status bar cover
                 StatusBarCover()
+                
+                if env.isCalculatingDirections {
+                    VStack {
+                        Spacer()
+                        VStack {
+                            LoadingIndicatorView()
+                            Text("Loading...")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                        }.padding()
+                        .background(Color.black)
+                        .opacity(0.7)
+                        .cornerRadius(5)
+                        Spacer()
+                    }
+                }
             }
             .navigationBarTitle("Search")
             .navigationBarHidden(true)
         }
+    }
+}
+
+struct LoadingIndicatorView: UIViewRepresentable {
+    typealias UIViewType = UIActivityIndicatorView
+    
+    func makeUIView(context: Context) -> UIActivityIndicatorView {
+        let aiv = UIActivityIndicatorView(style: .large)
+        aiv.color = .white
+        aiv.startAnimating()
+        return aiv
+    }
+    
+    func updateUIView(_ uiView: UIActivityIndicatorView, context: Context) {
+            
     }
 }
 
@@ -196,6 +227,8 @@ struct StatusBarCover: View {
 
 class DirectionsEnvironment: ObservableObject {
     
+    @Published var isCalculatingDirections = false
+    
     @Published var isSelectingSource = false
     @Published var isSelectingDestination = false
     
@@ -208,14 +241,19 @@ class DirectionsEnvironment: ObservableObject {
     
     init() {
         // lesten for changes of this items
-        cancellable = Publishers.CombineLatest($sourceMapItem, $destinationMapItem).sink { (items) in
+        cancellable = Publishers.CombineLatest($sourceMapItem, $destinationMapItem).sink { [weak self] (items) in
             
             // searching for directions
             let request = MKDirections.Request()
             request.source = items.0
             request.destination = items.1
             let directions = MKDirections(request: request)
+            
+            self?.isCalculatingDirections = true // switch on our HUD(activity indicator)
+            self?.route = nil
+            
             directions.calculate { [weak self] (response, error) in
+                self?.isCalculatingDirections = false
                 if let error = error {
                     print("Failed to calculate route: ", error)
                     return
