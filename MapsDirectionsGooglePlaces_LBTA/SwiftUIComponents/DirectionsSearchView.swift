@@ -63,8 +63,6 @@ struct DirectionsMapView: UIViewRepresentable {
 
 struct SelectLocationView: View {
     
-//    @Binding var isShowing: Bool
-    
     @State var mapItems = [MKMapItem]()
     
     @State var searchQuery = ""
@@ -139,41 +137,9 @@ struct DirectionsSearchView: View {
         NavigationView {
             ZStack(alignment: .top) {
                 VStack(spacing: -4) {
-                    VStack {
-                        
-                        HStack(spacing: 16) {
-                            Image(uiImage: #imageLiteral(resourceName: "start_location_circles")).frame(width: 24, height: 24)
-                            NavigationLink(
-                                destination: SelectLocationView(),
-                                isActive: $env.isSelectingSource,
-                                label: {
-                                    HStack {
-                                        Text(env.sourceMapItem != nil ? (env.sourceMapItem?.name ?? "") : "Source" )
-                                        Spacer()
-                                    }.padding()
-                                    .background(Color.white)
-                                    .cornerRadius(3)
-                                })
-                        }
-                        
-                        HStack(spacing: 16) {
-                            Image(uiImage: #imageLiteral(resourceName: "annotation_icon")
-                                    .withRenderingMode(.alwaysTemplate))
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(.white)
-                            NavigationLink(
-                                destination: SelectLocationView(),
-                                isActive: $env.isSelectingDestination,
-                                label: {
-                                    HStack {
-                                        Text(env.destinationMapItem != nil ? (env.destinationMapItem?.name ?? "") : "Destination")
-                                        Spacer()
-                                    }.padding()
-                                    .background(Color.white)
-                                    .cornerRadius(3)
-                                })
-                        }
-                        
+                    VStack(spacing: 12) {
+                        MapItemView(selectingBoolean: $env.isSelectingSource, title: env.sourceMapItem != nil ? (env.sourceMapItem?.name ?? "") : "Source", image: #imageLiteral(resourceName: "start_location_circles"))
+                        MapItemView(selectingBoolean: $env.isSelectingDestination, title: env.destinationMapItem != nil ? (env.destinationMapItem?.name ?? "") : "Destination", image: #imageLiteral(resourceName: "annotation_icon"))
                     }.padding()
                     .background(Color.blue)
                     
@@ -182,14 +148,49 @@ struct DirectionsSearchView: View {
                 }
                 
                 // status bar cover
-                Spacer().frame(width: UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.window?.frame.width,
-                               height: UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.safeAreaInsets.top)
-                    .background(Color.blue)
-                    .edgesIgnoringSafeArea(.top)
+                StatusBarCover()
             }
             .navigationBarTitle("Search")
             .navigationBarHidden(true)
         }
+    }
+}
+
+struct MapItemView: View {
+    
+    @EnvironmentObject var env: DirectionsEnvironment
+    
+    @Binding var selectingBoolean: Bool
+    
+    var title: String
+    var image: UIImage
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(uiImage: image.withRenderingMode(.alwaysTemplate))
+                .frame(width: 24, height: 24)
+                .foregroundColor(.white)
+            NavigationLink(
+                destination: SelectLocationView(),
+                isActive: $selectingBoolean,
+                label: {
+                    HStack {
+                        Text(title)
+                        Spacer()
+                    }.padding()
+                    .background(Color.white)
+                    .cornerRadius(3)
+                })
+        }
+    }
+}
+
+struct StatusBarCover: View {
+    var body: some View {
+        Spacer().frame(width: UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.window?.frame.width,
+                       height: UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.safeAreaInsets.top)
+            .background(Color.blue)
+            .edgesIgnoringSafeArea(.top)
     }
 }
 
