@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             
-            window.rootViewController = UIHostingController(rootView: DirectionsSearchView())
+            window.rootViewController = UIHostingController(rootView: DirectionsSearchView().environmentObject(DirectionsEnvironment()))
             self.window = window
             window.makeKeyAndVisible()
         }

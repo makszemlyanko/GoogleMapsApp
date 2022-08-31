@@ -22,17 +22,20 @@ struct DirectionsMapView: UIViewRepresentable {
 
 struct SelectLocationView: View {
     
-    @Binding var isShowing: Bool
+//    @Binding var isShowing: Bool
     
     @State var mapItems = [MKMapItem]()
     
     @State var searchQuery = ""
     
+    @EnvironmentObject var env: DirectionsEnvironment
+    
     var body: some View {
         VStack {
             HStack(spacing: 16) {
                 Button(action: {
-                    self.isShowing = false
+                    self.env.isSelectingSource = false
+                    self.env.isSelectingDestination = false // transition to previous screen
                 }, label: {
                     Image(uiImage: #imageLiteral(resourceName: "back_arrow"))
                 })
@@ -56,15 +59,26 @@ struct SelectLocationView: View {
             if mapItems.count > 0 {
                 ScrollView {
                     ForEach(mapItems, id: \.self) { item in
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text("\(item.name ?? "")")
-                                    .font(.headline)
-                                Text("\(item.adress())")
+                        Button(action: {
+                            if self.env.isSelectingSource {
+                                self.env.isSelectingSource = false
+                                self.env.sourceMapItem = item
+                            } else {
+                                self.env.isSelectingDestination = false
+                                self.env.destinationMapItem = item
                             }
-                            .padding()
-                            Spacer()
-                        }
+                        }, label: {
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text("\(item.name ?? "")")
+                                        .font(.headline)
+                                    Text("\(item.adress())")
+                                }
+                                .padding()
+                                Spacer()
+                            }
+                        })
+                        .foregroundColor(.black)
                         Divider()
                     }
                 }
@@ -92,7 +106,7 @@ struct SelectLocationView: View {
 
 struct DirectionsSearchView: View {
     
-    @State var isSelectingSource = false
+    @EnvironmentObject var env: DirectionsEnvironment
     
     var body: some View {
         NavigationView {
@@ -103,11 +117,11 @@ struct DirectionsSearchView: View {
                         HStack(spacing: 16) {
                             Image(uiImage: #imageLiteral(resourceName: "start_location_circles")).frame(width: 24, height: 24)
                             NavigationLink(
-                                destination: SelectLocationView(isShowing: $isSelectingSource),
-                                isActive: $isSelectingSource,
+                                destination: SelectLocationView(),
+                                isActive: $env.isSelectingSource,
                                 label: {
                                     HStack {
-                                        Text("Source")
+                                        Text(env.sourceMapItem != nil ? (env.sourceMapItem?.name ?? "") : "Source" )
                                         Spacer()
                                     }.padding()
                                     .background(Color.white)
@@ -120,13 +134,17 @@ struct DirectionsSearchView: View {
                                     .withRenderingMode(.alwaysTemplate))
                                 .frame(width: 24, height: 24)
                                 .foregroundColor(.white)
-                            HStack {
-                                Text("Destination")
-                                Spacer()
-                            }.padding()
-                            .background(Color.white)
-                            .cornerRadius(3)
-                            
+                            NavigationLink(
+                                destination: SelectLocationView(),
+                                isActive: $env.isSelectingDestination,
+                                label: {
+                                    HStack {
+                                        Text(env.destinationMapItem != nil ? (env.destinationMapItem?.name ?? "") : "Destination")
+                                        Spacer()
+                                    }.padding()
+                                    .background(Color.white)
+                                    .cornerRadius(3)
+                                })
                         }
                         
                     }.padding()
@@ -148,8 +166,20 @@ struct DirectionsSearchView: View {
     }
 }
 
+class DirectionsEnvironment: ObservableObject {
+    
+    @Published var isSelectingSource = false
+    @Published var isSelectingDestination = false
+    
+    @Published var sourceMapItem: MKMapItem?
+    @Published var destinationMapItem: MKMapItem?
+}
+
 struct DirectionsSearchView_Previews: PreviewProvider {
+    
+    static var env = DirectionsEnvironment()
+    
     static var previews: some View {
-        DirectionsSearchView()
+        DirectionsSearchView().environmentObject(env)
     }
 }
