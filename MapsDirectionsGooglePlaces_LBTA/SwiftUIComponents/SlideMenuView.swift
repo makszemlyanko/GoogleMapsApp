@@ -47,7 +47,7 @@ struct SlideMenuView: View {
                 Spacer()
             }.padding()
             
-            // dark map background
+            // Dark map background
             Color(.init(white: 0, alpha: self.isShowingMenu ? 0.5 : 0))
                 .edgesIgnoringSafeArea(.all)
                 .animation(.spring())
@@ -55,7 +55,7 @@ struct SlideMenuView: View {
             // Menu
             HStack {
                 ZStack {
-                    Color.white
+                    Color(.systemBackground)
                         .edgesIgnoringSafeArea(.all)
                         .onTapGesture(perform: {
                             self.isShowingMenu.toggle()
@@ -63,9 +63,14 @@ struct SlideMenuView: View {
                     HStack {
                         VStack {
                             HStack {
-                                Text("Menu")
-                                    .font(.system(size: 26, weight: .bold))
-                                Spacer()
+                                Button(action: {
+                                    self.isShowingMenu.toggle()
+                                }, label: {
+                                    Text("Menu")
+                                        .foregroundColor(Color(.label))
+                                        .font(.system(size: 26, weight: .bold))
+                                    Spacer()
+                                })
                             }.padding()
                          
                             VStack {
@@ -78,10 +83,10 @@ struct SlideMenuView: View {
                                             Image(systemName: item.mapTypeIcon)
                                             Text(item.title)
                                             Spacer()
-                                        }
-                                        .foregroundColor(.black)
-                                    })
-                                }.padding()
+                                        }.padding()
+                                    }).foregroundColor(self.mapType != item.mapType ? Color(.label) : Color(.systemBackground))
+                                    .background(self.mapType == item.mapType ? Color(.label) : Color(.systemBackground))
+                                }
                             }
                             Spacer()
                         }
@@ -116,6 +121,8 @@ struct SlideMenuMapView: UIViewRepresentable {
 
 struct SlideMenuView_Previews: PreviewProvider {
     static var previews: some View {
-        SlideMenuView()
+        ForEach([ColorScheme.dark, .light], id: \.self) { scheme in
+            SlideMenuView().colorScheme(scheme)
+        }
     }
 }
