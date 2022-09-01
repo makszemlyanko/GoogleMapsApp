@@ -8,13 +8,27 @@
 import SwiftUI
 import MapKit
 
+struct MenuItem: Identifiable, Hashable {
+    let id = UUID().uuidString
+    let title: String
+    let mapType: MKMapType
+    let mapTypeIcon: String
+}
+
 struct SlideMenuView: View {
     
     @State var isShowingMenu = false
+    @State var mapType: MKMapType = .standard
+    
+    let menuItems: [MenuItem] = [
+        .init(title: "Standard", mapType: .standard, mapTypeIcon: "car"),
+        .init(title: "Hybrid", mapType: .hybrid, mapTypeIcon: "antenna.radiowaves.left.and.right"),
+        .init(title: "Globe", mapType: .satelliteFlyover, mapTypeIcon: "safari")
+    ]
     
     var body: some View {
         ZStack {
-            SlideMenuMapView()
+            SlideMenuMapView(mapType: mapType)
                 .edgesIgnoringSafeArea(.all)
             
             // Menu button
@@ -46,8 +60,31 @@ struct SlideMenuView: View {
                         .onTapGesture(perform: {
                             self.isShowingMenu.toggle()
                         })
-                    VStack {
-                        Text("menu")
+                    HStack {
+                        VStack {
+                            HStack {
+                                Text("Menu")
+                                    .font(.system(size: 26, weight: .bold))
+                                Spacer()
+                            }.padding()
+                         
+                            VStack {
+                                ForEach(menuItems, id: \.self) { item in
+                                    Button(action: {
+                                        self.mapType = item.mapType
+                                        self.isShowingMenu.toggle()
+                                    }, label: {
+                                        HStack(spacing: 16) {
+                                            Image(systemName: item.mapTypeIcon)
+                                            Text(item.title)
+                                            Spacer()
+                                        }
+                                        .foregroundColor(.black)
+                                    })
+                                }.padding()
+                            }
+                            Spacer()
+                        }
                         Spacer()
                     }
                 }
@@ -63,15 +100,16 @@ struct SlideMenuView: View {
 
 struct SlideMenuMapView: UIViewRepresentable {
     
-    
     typealias UIViewType = MKMapView
+    
+    var mapType: MKMapType
     
     func makeUIView(context: Context) -> MKMapView {
         MKMapView()
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
-            
+        uiView.mapType = mapType
     }
         
 }
