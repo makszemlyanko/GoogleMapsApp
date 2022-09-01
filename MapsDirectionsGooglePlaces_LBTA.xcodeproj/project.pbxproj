@@ -23,6 +23,7 @@
 		15D8758128B35A2500BFA940 /* LocationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D8758028B35A2500BFA940 /* LocationSearchController.swift */; };
 		15D8758728B3A1DD00BFA940 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 15D8758628B3A1DD00BFA940 /* JGProgressHUD */; };
 		15E97DEF28BE485C0019B514 /* DirectionsSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E97DEE28BE485C0019B514 /* DirectionsSearchView.swift */; };
+		15E97DF228C08B5B0019B514 /* SlideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E97DF128C08B5A0019B514 /* SlideMenuView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		15D8757B28B2AA8400BFA940 /* DirectionsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectionsController.swift; sourceTree = "<group>"; };
 		15D8758028B35A2500BFA940 /* LocationSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchController.swift; sourceTree = "<group>"; };
 		15E97DEE28BE485C0019B514 /* DirectionsSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsSearchView.swift; sourceTree = "<group>"; };
+		15E97DF128C08B5A0019B514 /* SlideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideMenuView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 			children = (
 				1510F78128B6473100FC8765 /* MapSearchingVIew.swift */,
 				15E97DEE28BE485C0019B514 /* DirectionsSearchView.swift */,
+				15E97DF128C08B5A0019B514 /* SlideMenuView.swift */,
 			);
 			path = SwiftUIComponents;
 			sourceTree = "<group>";
@@ -216,6 +219,7 @@
 				153EDA2A28AB81CF0078F8CD /* SceneDelegate.swift in Sources */,
 				153EDA2C28AB81CF0078F8CD /* ContentView.swift in Sources */,
 				153EDA3D28AB83660078F8CD /* MainViewController.swift in Sources */,
+				15E97DF228C08B5B0019B514 /* SlideMenuView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
