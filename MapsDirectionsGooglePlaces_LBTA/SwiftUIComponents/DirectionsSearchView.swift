@@ -133,6 +133,8 @@ struct DirectionsSearchView: View {
     
     @EnvironmentObject var env: DirectionsEnvironment
     
+    @State var isPresentingRouteModal = false
+    
     var body: some View {
         NavigationView {
             ZStack(alignment: .top) {
@@ -149,6 +151,28 @@ struct DirectionsSearchView: View {
                 
                 // status bar cover
                 StatusBarCover()
+                
+                VStack {
+                    Spacer()
+                    Button(action: {
+                        if env.sourceMapItem != nil && env.destinationMapItem != nil {
+                            self.isPresentingRouteModal.toggle() // changing on "true"
+                        }
+                    }, label: {
+                        HStack {
+                            Spacer()
+                            Text("ROUTE INFO")
+                                .foregroundColor(.white)
+                                .padding()
+                            Spacer()
+                        }
+                        .background(Color.black)
+                        .cornerRadius(5)
+                        .padding()
+                    })
+                }.sheet(isPresented: $isPresentingRouteModal, content: {
+                    RouteInfoView(route: self.env.route)
+                })
                 
                 if env.isCalculatingDirections {
                     VStack {
@@ -172,7 +196,39 @@ struct DirectionsSearchView: View {
     }
 }
 
+struct RouteInfoView: View {
+    
+    var route: MKRoute?
+    
+    var body: some View {
+        VStack {
+            Text("\(route?.name ?? "")")
+        }
+        .font(.headline)
+        .padding()
+        
+        ScrollView {
+            VStack {
+                ForEach(route!.steps, id: \.self) { step in
+                    VStack {
+                        // remove first empty row (0.0 km)
+                        if !step.instructions.isEmpty {
+                            HStack {
+                                Text(step.instructions)
+                                Spacer()
+                                Text("\(String(format: "%.2f km", step.distance / 1000))")
+                            }
+                            .padding()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 struct LoadingIndicatorView: UIViewRepresentable {
+    
     typealias UIViewType = UIActivityIndicatorView
     
     func makeUIView(context: Context) -> UIActivityIndicatorView {
@@ -217,6 +273,7 @@ struct MapItemView: View {
 }
 
 struct StatusBarCover: View {
+    
     var body: some View {
         Spacer().frame(width: UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.window?.frame.width,
                        height: UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.safeAreaInsets.top)
