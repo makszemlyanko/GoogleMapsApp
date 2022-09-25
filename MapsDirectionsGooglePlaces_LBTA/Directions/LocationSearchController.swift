@@ -43,7 +43,7 @@ class LocationSearchController: LBTAListController<LocationSearchCell, MKMapItem
         searchTextField.becomeFirstResponder()
     }
     
-    fileprivate func setupSearchBar() {
+    private func setupSearchBar() {
         let navBar = UIView(backgroundColor: #colorLiteral(red: 0.2594739795, green: 0.5265274644, blue: 0.9591371417, alpha: 1))
         view.addSubview(navBar)
         navBar.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.topAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: -navBarHeight, right: 0))
@@ -62,12 +62,12 @@ class LocationSearchController: LBTAListController<LocationSearchCell, MKMapItem
         setupSearchListener()
     }
     
-    fileprivate func setupSearchListener() {
+    private func setupSearchListener() {
         searchTextField.addTarget(self, action: #selector(handleSearchChanges), for: .editingChanged)
 
     }
     
-    @objc fileprivate func handleSearchChanges() {
+    @objc private func handleSearchChanges() {
         performLocalSearch()
     }
     
@@ -75,7 +75,7 @@ class LocationSearchController: LBTAListController<LocationSearchCell, MKMapItem
         navigationController?.popViewController(animated: true)
     }
     
-    fileprivate func performLocalSearch() {
+    private func performLocalSearch() {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = searchTextField.text
         

@@ -50,7 +50,7 @@ struct MapViewContainer: UIViewRepresentable {
         }
     }
     
-    fileprivate func setupRegionForMap() {
+    private func setupRegionForMap() {
         let centerCoordinate = CLLocationCoordinate2D(latitude: 37.773972, longitude: -122.431297)
         let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
         let region = MKCoordinateRegion(center: centerCoordinate, span: span)
@@ -84,7 +84,7 @@ struct MapViewContainer: UIViewRepresentable {
     }
     
     // This checks to see whether or not annotations have changed.  The algorithm generates a hashmap/dictionary for all the annotations and then goes through the map to check if they exist. If it doesn't currently exist, we treat this as a need to refresh the map
-    fileprivate func shouldRefreshAnnotations(mapView: MKMapView) -> Bool {
+    private func shouldRefreshAnnotations(mapView: MKMapView) -> Bool {
         let grouped = Dictionary(grouping: mapView.annotations, by: { $0.title ?? ""})
         for (_, annotation) in annotations.enumerated() {
             if grouped[annotation.title ?? ""] == nil {
@@ -112,7 +112,7 @@ class MapSearchingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     
     let locationManager = CLLocationManager()
     
-    fileprivate var region: MKCoordinateRegion?
+    private var region: MKCoordinateRegion?
     
     override init() {
         super.init()
@@ -145,7 +145,7 @@ class MapSearchingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
         self.currentLocation = firstLocation.coordinate
     }
     
-    fileprivate func listenForKeyboardNotifications() {
+    private func listenForKeyboardNotifications() {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { [weak self] (notification) in
             guard let value = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
             let keyboardFrame = value.cgRectValue
@@ -165,7 +165,7 @@ class MapSearchingViewModel: NSObject, ObservableObject, CLLocationManagerDelega
         }
     }
     
-    fileprivate func performSearch(query: String) {
+    private func performSearch(query: String) {
         isSearching = true
         
         let request = MKLocalSearch.Request()

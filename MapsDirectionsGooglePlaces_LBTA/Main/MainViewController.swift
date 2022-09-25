@@ -29,19 +29,19 @@ class MainViewController: UIViewController {
         requestUserlocation()
     }
     
-    fileprivate func requestUserlocation() {
+    private func requestUserlocation() {
         locationManager.requestWhenInUseAuthorization()
         locationManager.delegate = self
     }
     
-    fileprivate func setupMapView() {
+    private func setupMapView() {
         mapView.delegate = self
         view.addSubview(mapView)
         mapView.fillSuperview()
         mapView.showsUserLocation = true
     }
     
-    fileprivate func setupSearchUI() {
+    private func setupSearchUI() {
         let whiteContainer = UIView(backgroundColor: .white)
         view.addSubview(whiteContainer)
         whiteContainer.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: .init(top: 0, left: 16, bottom: 0, right: 16))
@@ -52,18 +52,18 @@ class MainViewController: UIViewController {
         searchTextField.addTarget(self, action: #selector(handleSearchChanges), for: .editingChanged)
     }
     
-    fileprivate func setupLocationsCarousel() {
+    private func setupLocationsCarousel() {
         let locationsView = locationsController.view!
         locationsController.mainController = self
         view.addSubview(locationsView)
         locationsView.anchor(top: nil, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, size: .init(width: 0, height: 150))
     }
     
-    @objc fileprivate func handleSearchChanges() {
+    @objc private func handleSearchChanges() {
         performLocalSearch()
     }
     
-    fileprivate func performLocalSearch() {
+    private func performLocalSearch() {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = searchTextField.text
         request.region = mapView.region

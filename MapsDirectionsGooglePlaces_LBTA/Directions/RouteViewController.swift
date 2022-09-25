@@ -50,7 +50,7 @@ class RouteHeader: UICollectionReusableView {
         estimatedTimeLabel.attributedText = generateAttributedString(title: "Estimated Time", description: timeString)
     }
     
-    fileprivate func generateAttributedString(title: String, description: String) -> NSAttributedString {
+    private func generateAttributedString(title: String, description: String) -> NSAttributedString {
         let attributeString = NSMutableAttributedString(string: title + ": ", attributes: [.font: UIFont.boldSystemFont(ofSize: 16)])
         attributeString.append(.init(string: description, attributes: [.font: UIFont.systemFont(ofSize: 16)]))
         return attributeString

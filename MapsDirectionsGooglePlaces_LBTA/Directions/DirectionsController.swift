@@ -34,7 +34,7 @@ class DirectionsController: UIViewController {
         setupRouteButton()
     }
     
-    fileprivate func setupRouteButton() {
+    private func setupRouteButton() {
         let routeButton = UIButton(title: "Route", titleColor: .black, font: .boldSystemFont(ofSize: 16), backgroundColor: .white, target: self, action: #selector(handleShowRoute))
         view.addSubview(routeButton)
         routeButton.layer.opacity = 0.8
@@ -43,20 +43,20 @@ class DirectionsController: UIViewController {
         routeButton.anchor(top: nil, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, padding: .allSides(16), size: .init(width: 0, height: 50))
     }
     
-    @objc fileprivate func handleShowRoute() {
+    @objc private func handleShowRoute() {
         let routeViewController = RouteViewController()
         routeViewController.route = currentlyShowingRoute
         routeViewController.items = currentlyShowingRoute?.steps.filter({!$0.instructions.isEmpty}) ?? [] // filter empty rows
         present(routeViewController, animated: true)
     }
     
-    fileprivate func setupMapView() {
+    private func setupMapView() {
         mapView.anchor(top: navBar.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
         mapView.showsUserLocation = true
         mapView.delegate = self
     }
 
-    fileprivate func requestForDirections() {
+    private func requestForDirections() {
         
         let request = MKDirections.Request()
         request.source = startMapItem
@@ -85,7 +85,7 @@ class DirectionsController: UIViewController {
             }
     }
     
-    fileprivate func setupNavBarUI() {
+    private func setupNavBarUI() {
         view.addSubview(navBar)
         navBar.setupShadow(opacity: 0.5, radius: 5)
         navBar.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.topAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: -120, right: 0))
@@ -125,7 +125,7 @@ class DirectionsController: UIViewController {
         navigationController?.navigationBar.isHidden = true
     }
     
-    @objc fileprivate func handleChangeStartLocation() {
+    @objc private func handleChangeStartLocation() {
         let vc = LocationSearchController()
         vc.selectionHandler = { [weak self] mapItem in
             self?.startTextField.text = mapItem.name
@@ -137,7 +137,7 @@ class DirectionsController: UIViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    @objc fileprivate func handleChangeEndLocation() {
+    @objc private func handleChangeEndLocation() {
         let vc = LocationSearchController()
         vc.selectionHandler = { [weak self] mapItem in
             self?.endTextField.text = mapItem.name
@@ -170,7 +170,7 @@ class DirectionsController: UIViewController {
         mapView.showAnnotations(mapView.annotations, animated: false)
     }
     
-    fileprivate func setupRegionForMap() {
+    private func setupRegionForMap() {
         let centerCoordinate = CLLocationCoordinate2D(latitude: 37.7666, longitude: -122.427290)
         let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
         let region = MKCoordinateRegion(center: centerCoordinate, span: span)
